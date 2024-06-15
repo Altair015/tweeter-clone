@@ -1,0 +1,3 @@
+controllers : bussiness logic for each route
+models : mongo Schema's
+routes : api routes
