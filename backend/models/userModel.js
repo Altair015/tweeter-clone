@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    fullname: {
+      type: String,
+      required: true,
+      maxlength: 30,
+    },
     username: {
       type: String,
       required: true,
@@ -15,31 +20,34 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
       required: true,
       maxlength: 60,
     },
     dob: {
       type: Date,
-      required: true,
+      default: null,
     },
     location: {
       type: String,
+      default: null,
     },
     proile_img: {
-      type: Date,
+      type: String,
+      default: null,
     },
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
+        default: [],
       },
     ],
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
+        default: [],
       },
     ],
   },

@@ -1,30 +1,38 @@
+import { resourceConflict } from "../errors/dbErrors.js";
 import User from "../models/userModel.js";
+import bcrypt from "bcrypt";
+import { hashingPassword } from "../utils/hashingPassword.js";
 
-export async function createUser(req, res) {
+export async function registerUser(req, res) {
   try {
-    const { username, password, email, dob, location } = req.body;
+    const { username, fullname, password, email, location } = req.body;
 
-    const findByEmail = await User.findOne({ email });
-    const findByUsername = await User.findOne({ username });
+    const hashedPassword = hashingPassword(password, 13);
 
-    const newUser = new User({
+    // "save" to create|update, "create" to create!update
+    const dbResponse = await User.create({
       username,
-      password,
+      password: hashedPassword,
       email,
-      dob,
       location,
+      fullname,
     });
 
-    const response = await newUser.save();
+    console.log(dbResponse);
 
-    console.log(response);
+    const apiResponse = { username, email, location, fullname };
+
+    res.status(200).send({
+      apiResponse,
+    });
   } catch (error) {
-    console.log(error.message);
-    res.status(409).send({
-      connection: "ok",
+    console.log(error);
+
+    const errorEntity = resourceConflict(error);
+
+    res.status(errorEntity.status).send({
       status: "failure",
-      //   error: "user with this email already exists",
-      error: error.message,
+      error: errorEntity.message,
     });
   }
 }
