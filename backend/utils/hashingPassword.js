@@ -6,3 +6,7 @@ export function hashingPassword(password, saltLength) {
 
   return hashedPassword;
 }
+
+export function validatePassword(password, hashedPassword) {
+  return bcrypt.compareSync(password, hashedPassword);
+}

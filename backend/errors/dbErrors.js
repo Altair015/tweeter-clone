@@ -17,3 +17,5 @@ export const resourceConflict = (error) => {
     type: "others",
   };
 };
+
+export const resouceInvalid = (error) => {};

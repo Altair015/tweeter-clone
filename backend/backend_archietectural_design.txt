@@ -1,3 +1,9 @@
 controllers : bussiness logic for each route
 models : mongo Schema's
 routes : api routes
+    authRoute :
+utils: miscellaneous
+    handleJWT : to manage jwt authentication
+    hashingPassword : bcrypt liberary for securing DB passwords
+    mongoDateFormatter : to format the date according to mongoDB date format
+ 

@@ -1,4 +1,7 @@
-npm init -y
-npm i -D nodemon morgan
-npm i bcrypt express mongoose dotenv
-npm i -D '@types/mongoose@~8.4.0
+cmd:
+    npm init -y
+    npm i -D nodemon morgan
+    npm i bcrypt express mongoose dotenv jsonwebtoken cookie-parser
+
+git : 
+    openssl rand -base64 32 (to generate JWT Secret)
