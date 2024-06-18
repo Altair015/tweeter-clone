@@ -1,7 +1,7 @@
 controllers : bussiness logic for each route
 models : mongo Schema's
 routes : api routes
-    authRoute :
+    authRoute : signin, signup and signout
 utils: miscellaneous
     handleJWT : to manage jwt authentication
     hashingPassword : bcrypt liberary for securing DB passwords

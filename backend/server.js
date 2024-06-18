@@ -1,10 +1,10 @@
-import express from "express";
-import dotenv from "dotenv";
-import connectDB from "./db/connection.js";
-import userRoutes from "./routes/userRoute.js";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import express from "express";
+import morgan from "morgan";
+import connectDB from "./db/connection.js";
 import { ValidateJWTMiddleware } from "./middlewares/protected.js";
+import routers from "./routes/routers_v_1.js";
 import { generateJWT } from "./utils/handleJWT.js";
 
 const server = express();
@@ -17,7 +17,7 @@ server.use(express.urlencoded({ extended: false }));
 server.use(morgan("combined"));
 server.use(cookieParser());
 
-server.use("/api", userRoutes);
+server.use("/api", routers);
 
 //testing routes
 server.get("/api/gen_token", (req, res) => {

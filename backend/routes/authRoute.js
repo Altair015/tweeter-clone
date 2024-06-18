@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { createUser } from "../controllers/userController.js";
+import { signIn, signOut, signUp } from "../controllers/authController.js";
 
-const router = Router();
+const routers = Router();
 
-router.use("/auth", userEndPoint);
+routers.use("/auth/signup", signUp);
+routers.use("/auth/signin", signIn);
+routers.use("/auth/signout", signOut);
 
-function userEndPoint() {
-  return router.post("/", createUser);
-}
-
-export default router;
+export default routers;
