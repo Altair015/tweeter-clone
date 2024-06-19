@@ -4,7 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import connectDB from "./db/connection.js";
 import { ValidateJWTMiddleware } from "./middlewares/protected.js";
-import routers from "./routes/routers_v_1.js";
+import routers from "./routes/routers.js";
 import { generateJWT } from "./utils/handleJWT.js";
 
 const server = express();
@@ -19,7 +19,8 @@ server.use(cookieParser());
 
 server.use("/api", routers);
 
-//testing routes
+//testing routes, needed to be removed when, done testing all the frontend calls
+// ==============================================================================================================
 server.get("/api/gen_token", (req, res) => {
   const { userId } = req.query;
   console.log(userId);
@@ -29,6 +30,7 @@ server.get("/api/gen_token", (req, res) => {
 server.post("/api/home", ValidateJWTMiddleware, (req, res) => {
   res.send({ data: req.body });
 });
+// ==============================================================================================================
 
 server.listen(PORT, () => {
   console.log(`express running on ${PORT} `);

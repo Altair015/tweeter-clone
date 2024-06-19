@@ -1,9 +1,16 @@
-controllers : bussiness logic for each route
-models : mongo Schema's
-routes : api routes
-    authRoute : signin, signup and signout
-utils: miscellaneous
-    handleJWT : to manage jwt authentication
-    hashingPassword : bcrypt liberary for securing DB passwords
-    mongoDateFormatter : to format the date according to mongoDB date format
+application design :
+    controllers : bussiness logic for each route
+    models : mongo Schema's
+    routes : api routes
+        authRoute : signin, signup and signout
+    utils : miscellaneous
+        handleJWT : to manage jwt authentication
+        hashingPassword : bcrypt liberary for securing DB passwords
+        mongoDateFormatter : to format the date according to mongoDB date format
+    middlewares : 
+        protected : middleware to authenticate, using jwt token for protected routes
+
+---------------------------------------------------------------------------------------------------------------------
+routing design :
+    server(/api)->route(/v_<version no>)->route(/[auth,user]/..)
  
