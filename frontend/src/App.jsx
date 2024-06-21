@@ -1,10 +1,13 @@
-import "./App.css";
-import { Login } from "./components";
+import { Suspense } from "react";
+import router from "./routes";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
-  if (true) return <Login />;
-
-  return <></>;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default App;
