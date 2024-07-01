@@ -1,12 +1,13 @@
-import React, { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { Layout } from "./components";
-
-const LazyHome = lazy(() => import("./components/main/home/Home"));
-const LazyUserProfile = lazy(() =>
-  import("./components/main/user-profile/UserProfile")
-);
-const LazyContact = lazy(() => import("./components/main/contact/Contact"));
+import {
+  Layout,
+  Contact,
+  Home,
+  Login,
+  SignUp,
+  UserProfile,
+  PageNotFound,
+} from "./components";
 
 const router = createBrowserRouter([
   {
@@ -14,18 +15,35 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
+        path: "",
+        action: "home",
+        element: <Home />,
+      },
+      {
         path: "home",
-        element: <LazyHome />,
+        element: <Home />,
       },
       {
         path: "contact",
-        element: <LazyContact />,
+        element: <Contact />,
       },
       {
         path: "profile",
-        element: <LazyUserProfile />,
+        element: <UserProfile />,
+      },
+      {
+        path: "*",
+        element: <PageNotFound />,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "register",
+    element: <SignUp />,
   },
 ]);
 

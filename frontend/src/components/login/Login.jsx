@@ -1,11 +1,60 @@
-import React from "react";
+import axios from "axios";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+
+import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "../../hooks";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { token, setToken } = useAuth();
+  const [disableSubmitButton, setdisableSubmitButton] = useState(false);
+  const VITE_BACKEND_IDENTIFIER = import.meta.env.VITE_BACKEND_IDENTIFIER;
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setdisableSubmitButton(true);
+
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+
+    try {
+      await toast.promise(
+        axios.post(`${VITE_BACKEND_IDENTIFIER}/auth/signin`, {
+          username,
+          password,
+        }),
+        {
+          pending: "In process",
+          success: {
+            render({ data: success }) {
+              // setting token in the authContext
+              const { token } = success.data;
+              setToken(token);
+
+              navigate("/home");
+              return "Successfully logged in";
+            },
+          },
+          error: {
+            render({ data }) {
+              setdisableSubmitButton(false);
+              return data.response.data.message;
+            },
+          },
+        }
+      );
+    } catch (error) {
+      // toast.error(error.response.data.message);
+      console.log(error);
+    }
+  };
+
   return (
     <Container
       fluid
@@ -26,29 +75,36 @@ const Login = () => {
               md={8}
               className="login-form-section bg-light p-4 rounded-end-2"
             >
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <h2 className="mb-4">Login</h2>
                 <Form.Control
+                  id="username"
                   className="mb-3"
                   type="text"
                   placeholder="Username"
                 />
                 <Form.Control
+                  id="password"
                   className="mb-3"
                   type="password"
                   placeholder="Password"
                 />
-                <Button variant="primary" type="submit">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={disableSubmitButton}
+                >
                   Login
                 </Button>
                 <p className="mt-3">
-                  Do not have an account? <a href="/signup">Sign up</a>
+                  Do not have an account? <a href="/register">Sign up</a>
                 </p>
               </Form>
             </Col>
           </Row>
         </Col>
       </Row>
+      <ToastContainer autoClose={2000} />
     </Container>
   );
 };

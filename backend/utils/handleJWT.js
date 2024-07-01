@@ -16,6 +16,8 @@ export function generateJWT(userId, res) {
     maxAge,
     httpOnly: true,
   });
+
+  return token;
 }
 
 export function validateJWT(token) {

@@ -1,5 +1,6 @@
-body {
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(29, 155, 240);
+#root {
+  /* width: 100vw; */
+  height: 100vh;
+  background-color: rgb(29, 155, 240);
+  /* overflow: hidden; */
 }

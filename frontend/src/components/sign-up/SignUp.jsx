@@ -1,12 +1,39 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import axios from "axios";
 
 const SignUp = () => {
   const [validated, setValidated] = useState(false);
+
+  const handleOnSubmit = async (e) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    e.preventDefault();
+    setValidated(true);
+
+    const VITE_BACKEND_IDENTIFIER = import.meta.env.VITE_BACKEND_IDENTIFIER;
+
+    const fullname = e.target.fullname.value;
+    const email = e.target.email.value;
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+    const confirmPassword = e.target.confirmPassword.value;
+
+    if (password === confirmPassword) {
+      const response = await axios.post(
+        `${VITE_BACKEND_IDENTIFIER}/auth/signup`,
+        { fullname, email, username, password }
+      );
+    }
+  };
+
   return (
     <Container
       fluid
@@ -27,36 +54,10 @@ const SignUp = () => {
               md={8}
               className="signup-form-section bg-light p-4 rounded-end-2"
             >
-              <Form
-                noValidate
-                validated={validated}
-                onSubmit={(e) => {
-                  const form = e.currentTarget;
-                  if (form.checkValidity() === false) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }
-                  e.preventDefault();
-                  setValidated(true);
-
-                  const fullName = e.target.fullName.value;
-                  const email = e.target.email.value;
-                  const username = e.target.username.value;
-                  const password = e.target.password.value;
-                  const confirmPassword = e.target.confirmPassword.value;
-
-                  console.log(
-                    fullName,
-                    email,
-                    username,
-                    password,
-                    confirmPassword
-                  );
-                }}
-              >
+              <Form noValidate validated={validated} onSubmit={handleOnSubmit}>
                 <h2 className="mb-4">SignUp</h2>
 
-                <Form.Group
+                {/* <Form.Group
                   as={Col}
                   className="mb-3"
                   controlId="validationCustom01"
@@ -67,27 +68,31 @@ const SignUp = () => {
                     type="text"
                     placeholder="First name"
                     defaultValue="Mark"
+                    autoComplete="new-password"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Control
-                  id="fullName"
+                  id="fullname"
                   className="mb-3"
                   type="text"
                   placeholder="Full Name"
+                  autoComplete="new-password"
                 />
                 <Form.Control
                   id="email"
                   className="mb-3"
                   type="email"
                   placeholder="Email"
+                  autoComplete="off"
                 />
                 <Form.Control
                   id="username"
                   className="mb-3"
                   type="text"
                   placeholder="Username"
+                  autoComplete="new-password"
                 />
                 <Form.Control
                   id="password"

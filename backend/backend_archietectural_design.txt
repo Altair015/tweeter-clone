@@ -5,12 +5,13 @@ application design :
         authRoute : signin, signup and signout
     utils : miscellaneous
         handleJWT : to manage jwt authentication
-        hashingPassword : bcrypt liberary for securing DB passwords
+        hashingPassword : bcrypt liberary for securing passwords
         mongoDateFormatter : to format the date according to mongoDB date format
     middlewares : 
         protected : middleware to authenticate, using jwt token for protected routes
+        ipCheck : middleware to validate the req, needed to be made from the same machine.
 
 ---------------------------------------------------------------------------------------------------------------------
 routing design :
-    server(/api)->route(/v_<version no>)->route(/[auth,user]/..)
+    server(/api)->route(/v_<version no>)->route(/[auth,user])
  

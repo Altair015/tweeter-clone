@@ -1,26 +1,21 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { HomeIcon, LogoutIcon, NavLink, ProfileIcon } from "../../components";
 
 export default function Nav() {
   return (
-    <nav>
+    <nav id="navigation " className="border-2 border-top">
+      <NavLink key="home-link" label="Home" to="/home" icon={<HomeIcon />} />
       <NavLink
-        exact
-        to="/home"
-        className="nav-link"
-        style={({ isActive, isPending, isTransitioning }) => {
-          return {
-            fontWeight: isActive ? "bold" : "",
-            backgroundColor: isActive ? "tomato" : "transparent",
-            color: isPending ? "red" : "black",
-          };
-        }}
-      >
-        Home
-      </NavLink>
-      <NavLink to="/contact" className="nav-link">
-        Contact
-      </NavLink>
+        key="profile-link"
+        label="Profile"
+        to="/profile"
+        icon={<ProfileIcon />}
+      />
+      <NavLink
+        key="logout-link"
+        label="Logout"
+        to="/login"
+        icon={<LogoutIcon />}
+      />
     </nav>
   );
 }

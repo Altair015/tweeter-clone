@@ -26,7 +26,7 @@ export async function signUp(req, res) {
     };
 
     // generates and add jwt to cookie
-    generateJWT(dbResponse._id, res);
+    // generateJWT(dbResponse._id, res);
 
     res.status(200).send({
       apiResponse,
@@ -47,12 +47,21 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
   try {
     const { username, password } = req.body;
+    console.log(username, password);
 
     const dbResponse = await User.findOne({ username });
 
+    if (!dbResponse) {
+      res.status(401).send({
+        status: "unauthorized",
+        message: "Wrong UserName or Password",
+      });
+      return;
+    }
+
     const { _id: userId, password: hashedPassword } = dbResponse;
 
-    // decodes and validates
+    // decodes and validates jwt
     if (!validatePassword(password, hashedPassword)) {
       // wrong password error needed to be thrown [unauthorized]
       res.status(401).send({
@@ -63,11 +72,11 @@ export async function signIn(req, res) {
     }
 
     // generate new token
-    generateJWT(userId, res);
+    const token = generateJWT(userId, res);
 
-    res.status(200).send({
-      dbResponse,
-    });
+    // console.log(dbResponse.toJSON());
+
+    res.status(200).json({ ...dbResponse.toJSON(), token });
   } catch (error) {
     res.status(500).send({
       status: "failure",

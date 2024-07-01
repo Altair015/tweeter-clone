@@ -1,9 +1,8 @@
-import React, { Children } from "react";
 import { Outlet } from "react-router-dom";
 
-export default function Main({ children }) {
+export default function Main() {
   return (
-    <main>
+    <main className="flex-fill bg-primary border-2 border-top overflow-y-auto overflow-x-hidden">
       <Outlet />
     </main>
   );

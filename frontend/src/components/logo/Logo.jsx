@@ -1,5 +1,7 @@
-import React from "react";
-
 export default function Logo() {
-  return <h1>Logo</h1>;
+  return (
+    <div className="p-2 m-0">
+      <p className="p-2 m-0 fw-bold">Chitter</p>
+    </div>
+  );
 }
