@@ -5,9 +5,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [validated, setValidated] = useState(false);
+  const navigate = useNavigate();
 
   const handleOnSubmit = async (e) => {
     const form = e.currentTarget;
@@ -31,6 +33,9 @@ const SignUp = () => {
         `${VITE_BACKEND_IDENTIFIER}/auth/signup`,
         { fullname, email, username, password }
       );
+      if (response) {
+        navigate("/login");
+      }
     }
   };
 

@@ -12,10 +12,14 @@ export function generateJWT(userId, res) {
 
   // added to cookie so that it even if the browser is closed,
   // the same jwt can be used again within expiry
-  res.cookie("jwt", token, {
-    maxAge,
-    httpOnly: true,
-  });
+  res.cookie(
+    "auth",
+    { token, userId },
+    {
+      maxAge,
+      httpOnly: true,
+    }
+  );
 
   return token;
 }

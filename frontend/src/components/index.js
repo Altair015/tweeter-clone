@@ -22,9 +22,9 @@ export { default as Main } from "./main/Main";
 export { default as Loader } from "./loader/Loader";
 export { default as NavLink } from "./nav-link/NavLink";
 export { default as UserInfo } from "./user-info/UserInfo";
-export { default as ComposeTweet } from "./new-tweet/ComposeTweet";
-export { default as Posts } from "./posts/Posts";
-export { default as Post } from "./post/Post";
+export { default as NewTweetButton } from "./new-tweet-button/NewTweetButton";
+// export { default as Posts } from "./posts/Posts";
+export { default as Tweet } from "./tweet/Tweet";
 export { default as PostImage } from "./post-image/PostImage";
 
 // icons
@@ -35,3 +35,4 @@ export { default as AddIcon } from "./icons/AddIcon";
 export { default as CommentsIcon } from "./icons/CommentsIcon";
 export { default as RetweetIcon } from "./icons/RetweetIcon";
 export { default as LikeIcon } from "./icons/LikeIcon";
+export { default as FileUploadIcon } from "./icons/FileUploadIcon";

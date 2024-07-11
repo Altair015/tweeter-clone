@@ -1,7 +1,25 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const tweetSchema = new Schema(
+const commentSchema = new mongoose.Schema(
   {
+    content: {
+      type: String,
+    },
+    commented_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  },
+  { timestamps: true }
+);
+
+const tweetSchema = new mongoose.Schema(
+  {
+    // parent_tweet: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Tweet",
+    //   default: null,
+    // },
     content: {
       type: String,
       required: true,
@@ -9,23 +27,26 @@ const tweetSchema = new Schema(
     image: {
       type: String,
     },
-    likes: {
-      type: Number,
-      default: 0,
-    },
-    comments: {
-      type: String,
-    },
-    replies: {
-      type: String,
-    },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    comments: [commentSchema],
+    replies: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tweet",
+      },
+    ],
     tweeted_by: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     retweeted_by: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],

@@ -7,21 +7,21 @@ import { Header, Login, Logo, Main, Nav, UserInfo } from "../../components";
 import { useAuth } from "../../hooks";
 
 export default function Layout() {
-  const { token } = useAuth();
+  const { auth } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     // create a new token on every next session
-    !token && navigate("/login", { replace: true });
+    !auth.token && navigate("/login", { replace: true });
     return () => {
       // clear the token on session close
     };
   }, []);
 
-  if (!token) return <Login />;
+  if (!auth.token) return <Login />;
 
   return (
-    token && (
+    auth.token && (
       <Container
         id="layout"
         className="d-flex vh-100"

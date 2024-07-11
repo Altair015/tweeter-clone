@@ -1,25 +1,11 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function LikeIcon() {
-  const [liked, setLiked] = useState(false);
+export default function LikeIcon({ liked, ...props }) {
   return liked ? (
-    <FontAwesomeIcon
-      icon={solidHeart}
-      role="button"
-      onClick={() => {
-        setLiked(false);
-      }}
-    />
+    <FontAwesomeIcon icon={solidHeart} role="button" {...props} />
   ) : (
-    <FontAwesomeIcon
-      icon={faHeart}
-      role="button"
-      onClick={() => {
-        setLiked(true);
-      }}
-    />
+    <FontAwesomeIcon icon={faHeart} role="button" {...props} />
   );
 }

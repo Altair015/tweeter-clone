@@ -5,13 +5,14 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import "./style.css";
 
 import { ToastContainer, toast } from "react-toastify";
 import { useAuth } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { token, setToken } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [disableSubmitButton, setdisableSubmitButton] = useState(false);
   const VITE_BACKEND_IDENTIFIER = import.meta.env.VITE_BACKEND_IDENTIFIER;
   const navigate = useNavigate();
@@ -34,8 +35,9 @@ const Login = () => {
           success: {
             render({ data: success }) {
               // setting token in the authContext
-              const { token } = success.data;
-              setToken(token);
+              console.log(success.data);
+              const { token, user_id } = success.data;
+              setAuth({ ...auth, token, user_id });
 
               navigate("/home");
               return "Successfully logged in";
@@ -66,14 +68,14 @@ const Login = () => {
             <Col
               xs={12}
               md={4}
-              className="login-logo-section bg-primary d-flex align-items-center justify-content-center rounded-start-2"
+              className="login-logo-section bg-primary d-flex align-items-center justify-content-center rounded-start-2 rounded-md-start-0 rounded-md-top-2"
             >
-              Logo
+              Chitter
             </Col>
             <Col
               xs={12}
               md={8}
-              className="login-form-section bg-light p-4 rounded-end-2"
+              className="login-form-section bg-light p-4 rounded-end-2 rounded-md-end-0 rounded-md-bottom-2"
             >
               <Form onSubmit={handleSubmit}>
                 <h2 className="mb-4">Login</h2>

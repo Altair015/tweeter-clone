@@ -5,12 +5,8 @@ import Row from "react-bootstrap/esm/Row";
 
 export default function UserInfo(props) {
   return (
-    <Container
-      {...props}
-      className="p-2 sticky-bottom border-2 border-top"
-      role="button"
-    >
-      <Row className="bg-warning d-flex align-items-center m-0 rounded p-2">
+    <Container {...props} className="p-2 sticky-bottom" role="button">
+      <Row className="d-flex align-items-center m-0 rounded p-2">
         <img
           src="/images/profile-placeholder.svg"
           className="p-0 rounded-circle w-100 h-100"

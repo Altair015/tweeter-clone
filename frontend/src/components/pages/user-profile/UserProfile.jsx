@@ -1,7 +1,14 @@
 import Button from "react-bootstrap/esm/Button";
-import { Post } from "../../../components";
+import { useEffect } from "react";
+import { useAxios } from "../../../hooks";
 
 export default function UserProfile() {
+  const { get } = useAxios();
+
+  useEffect(() => {
+    // get("")
+  }, []);
+
   return (
     <div id="user-profile-page" className="">
       <img
@@ -48,10 +55,6 @@ export default function UserProfile() {
           <p className="m-0 fw-normal">@Mandeep4651231</p>
         </div>
       </div>
-      <Post />
-      <Post />
-      <Post />
-      <Post />
     </div>
   );
 }

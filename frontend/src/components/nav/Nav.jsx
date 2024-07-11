@@ -2,7 +2,7 @@ import { HomeIcon, LogoutIcon, NavLink, ProfileIcon } from "../../components";
 
 export default function Nav() {
   return (
-    <nav id="navigation " className="border-2 border-top">
+    <nav id="navigation " className="">
       <NavLink key="home-link" label="Home" to="/home" icon={<HomeIcon />} />
       <NavLink
         key="profile-link"

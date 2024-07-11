@@ -74,9 +74,14 @@ export async function signIn(req, res) {
     // generate new token
     const token = generateJWT(userId, res);
 
-    // console.log(dbResponse.toJSON());
+    // converting document to plain javascript object
+    const plainObject = dbResponse.toObject();
+    console.log(dbResponse, plainObject);
 
-    res.status(200).json({ ...dbResponse.toJSON(), token });
+    // removing password before sending as response
+    // delete plainObject.password;
+
+    res.status(200).json({ user_id: plainObject._id, token });
   } catch (error) {
     res.status(500).send({
       status: "failure",

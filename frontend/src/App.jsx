@@ -1,12 +1,17 @@
-import { Suspense, useEffect } from "react";
-import router from "./routes";
+import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 import { Loader } from "./components";
+import { AuthProvider, DataProvider } from "./contexts";
+import router from "./routes";
 
 function App() {
   return (
     <Suspense fallback={<Loader />}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <DataProvider>
+          <RouterProvider router={router} />
+        </DataProvider>
+      </AuthProvider>
     </Suspense>
   );
 }
