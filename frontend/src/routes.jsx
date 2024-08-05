@@ -1,13 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
+import { Layout } from "./components";
 import {
-  Layout,
-  Contact,
   Home,
   Login,
   SignUp,
   UserProfile,
   PageNotFound,
-} from "./components";
+  Tweet,
+  ResourceNotFound,
+} from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -23,11 +24,19 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "contact",
-        element: <Contact />,
+        path: "profile",
+        element: <UserProfile />,
       },
       {
-        path: "profile",
+        path: "tweet/:tweet_id",
+        element: <Tweet />,
+      },
+      {
+        path: "resource",
+        element: <ResourceNotFound />,
+      },
+      {
+        path: "user/:user_id",
         element: <UserProfile />,
       },
       {

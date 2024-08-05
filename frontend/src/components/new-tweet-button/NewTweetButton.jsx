@@ -6,7 +6,7 @@ import { AddIcon, FileUploadIcon } from "..";
 import { useAxios, useData } from "../../hooks";
 
 export default function NewTweetButton() {
-  const { data, setData } = useData();
+  const { storeData, setStoreData } = useData();
   const [show, setShow] = useState(false);
   const [imgPreview, setImagePreview] = useState(null);
 
@@ -35,20 +35,26 @@ export default function NewTweetButton() {
     formData.append("newTweetContent", newTweetContent);
 
     if (newTweetImg.length > 0) {
-      formData.append("newTweetImage", newTweetImg[0]);
+      formData.append("image", newTweetImg[0]);
     }
 
-    console.log(formData.get("newTweetImage"));
+    // console.log(formData.get("newTweetImage"));
 
     try {
       // having issue with NETWORK_ERR if modal not closed
-      const response = await post(`/tweet`, formData);
-      console.log(response);
-      const { _id: tweet_id } = response.tweet;
+      const response = await post("/tweet/new", formData);
+
+      const { _id: tweet_id } = response.data?.tweet;
+
       if (tweet_id) {
         setImagePreview(null);
-        // console.log({ ...data, tweets: [{}] });
-        setData({ ...data, tweets: [{ ...response.tweet }, ...data.tweets] });
+
+        setStoreData({
+          ...storeData,
+          tweets: [{ ...response.data.tweet }, ...storeData.tweets],
+          tweet: { ...response.data.tweet },
+        });
+
         handleClose();
       }
     } catch (error) {
@@ -113,7 +119,8 @@ export default function NewTweetButton() {
               <div className="w-100 d-flex justify-content-center ">
                 <img
                   src={imgPreview || "/images/posts-images/1.jpg"}
-                  className="w-75 rounded rounded-2"
+                  className="w-75 rounded rounded-2 h-100 object-fit-contain"
+                  style={{ maxHeight: "50vh" }}
                 />
               </div>
             )}

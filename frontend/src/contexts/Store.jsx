@@ -5,7 +5,7 @@ export const DataContext = createContext();
 
 const DataProvider = ({ children }) => {
   const { auth } = useAuth();
-  const [data, setData] = useState({
+  const [storeData, setStoreData] = useState({
     user: {
       tweets: [],
       username: null,
@@ -13,7 +13,7 @@ const DataProvider = ({ children }) => {
     },
     tweets: [],
   });
-  const initialState = { data, setData };
+  const initialState = { storeData, setStoreData };
   const { get } = useAxios();
 
   useEffect(() => {

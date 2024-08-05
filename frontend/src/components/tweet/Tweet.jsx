@@ -1,32 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Button from "react-bootstrap/esm/Button";
 import Col from "react-bootstrap/esm/Col";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
-import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { CommentsIcon, LikeIcon, PostImage, RetweetIcon } from "..";
-import Button from "react-bootstrap/esm/Button";
-import { useAuth, useAxios, useData } from "../../hooks";
+import Modal from "react-bootstrap/Modal";
+import { useNavigate } from "react-router-dom";
+import { CommentsIcon, DeleteIcon, LikeIcon, PostImage, RetweetIcon } from "..";
+import { useAxios } from "../../hooks";
 import "./style.css";
 
 export default function Tweet({
-  profileImage,
-  userName,
-  content,
-  postImage,
-  likes = [],
-  retweets = [],
-  comments = [],
-  createdAt,
-  tweetId,
+  disableOnTweetClick,
+  data,
+  tweet,
+  handleData,
 }) {
-  const { user_id: userId } = useAuth().auth;
-  const { data, setData } = useData();
   let profileImageUrl = null;
   let postImageUrl = null;
   const VITE_BACKEND_IMAGE_URI = import.meta.env.VITE_BACKEND_IMAGE_URI;
-
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const {
+    _id: tweetId,
+    comments = [],
+    likes = [],
+    retweeted_by: retweets = [],
+    tweeted_by,
+    image: postImage,
+    createdAt,
+    content,
+  } = tweet;
+  const { profile_pic: profileImage } = tweet.tweeted_by;
+  const { userId } = data?.user;
+
+  const inputRef = useRef(null);
 
   // counters to track the user interaction with buttons(like and retweet)
   const [commentsCounter, setCommentsCounter] = useState(comments.length);
@@ -34,8 +42,9 @@ export default function Tweet({
   const [liked, setLiked] = useState(likes.includes(userId));
   const [retweetsCounter, setRetweetsCounter] = useState(retweets.length);
   const [retweeted, setRetweeted] = useState(checkIfInclued(retweets, userId));
+  const [tweetedBy] = useState(tweeted_by);
 
-  const { post } = useAxios();
+  const { post, deleteRequest } = useAxios();
 
   // user-profile image
   if (profileImage)
@@ -44,17 +53,13 @@ export default function Tweet({
   // post image
   if (postImage) postImageUrl = `${VITE_BACKEND_IMAGE_URI}/${postImage}`;
 
-  const handleShow = () => setShow(true);
-
-  const handleClose = () => {
-    // e.stopPropagation();
+  const handleClose = (e) => {
+    e?.stopPropagation();
     setShow(false);
   };
 
   const handleOnSubmit = async (e) => {
-    // to stop bubbling
     e.preventDefault();
-    e.stopPropagation();
 
     const content = e.target["new-tweet-content"].value;
 
@@ -62,18 +67,16 @@ export default function Tweet({
       // user_id can be obtained from the cookie
       const response = await post(`/tweet/${tweetId}/reply`, { content });
 
-      console.log(response);
-
       // hiding the modal when reply has been saved successully
-      if (response.tweet._id) {
+      if (response.status === 200) {
         const tweets = data.tweets.map((tweet) => {
           if (tweetId === tweet._id) {
-            return response.tweet;
+            return response.data.tweet;
           }
           return tweet;
         });
 
-        setData({ ...data, tweets });
+        handleData({ ...data, tweets });
         setCommentsCounter((pre) => pre + 1);
         setShow(false);
       }
@@ -87,20 +90,19 @@ export default function Tweet({
 
   const handleLiked = async (e) => {
     e.stopPropagation();
-
     // post call to like
     if (!liked) {
       const response = await post(`/tweet/${tweetId}/like`);
 
-      if (response.tweet._id) {
+      if (response.status === 200) {
         const tweets = data.tweets.map((tweet) => {
           if (tweetId === tweet._id) {
-            return response.tweet;
+            return response.data.tweet;
           }
           return tweet;
         });
 
-        setData({ ...data, tweets });
+        handleData({ ...data, tweets });
         setLikesCounter((pre) => pre + 1);
         setLiked(true);
       }
@@ -110,147 +112,209 @@ export default function Tweet({
     if (liked) {
       const response = await post(`/tweet/${tweetId}/dislike`);
 
-      if (response.tweet._id) {
+      if (response.status === 200) {
         const tweets = data.tweets.map((tweet) => {
           if (tweetId === tweet._id) {
-            return response.tweet;
+            return response.data.tweet;
           }
           return tweet;
         });
 
-        setData({ ...data, tweets });
+        handleData({ ...data, tweets });
         setLikesCounter((pre) => pre - 1);
         setLiked(false);
       }
     }
   };
 
-  function checkIfInclued(array, userId) {
-    return !!array.filter((item) => item._id === userId).length;
-  }
-
   const handleRetweet = async (e) => {
     e.stopPropagation();
 
-    // check each retweet object for the current user
-    // const retweeted = retweets.filter((retweet) => retweet._id === userId);
-
     console.log("retweet", retweets, userId, checkIfInclued(retweets, userId));
 
-    if (checkIfInclued(retweets, userId)) return;
+    // this checks if the user has retweeted before,
+    // if true, not to allow the user to retweet again
+    if (checkIfInclued(retweets, userId)) {
+      return;
+    }
 
-    // //tweet/:tweet_id/retweet
     const response = await post(`/tweet/${tweetId}/retweet`);
     console.log(response);
 
-    if (checkIfInclued(response.tweet.retweeted_by, userId)) {
+    if (checkIfInclued(response.data.tweet.retweeted_by, userId)) {
       const tweets = data.tweets.map((tweet) => {
         if (tweetId === tweet._id) {
-          return response.tweet;
+          return response.data.tweet;
         }
         return tweet;
       });
 
-      setData({ ...data, tweets });
-      setRetweetsCounter((pre) => pre + 1);
       setRetweeted(true);
+      handleData({ ...data, tweets });
+      setRetweetsCounter((pre) => pre + 1);
     }
   };
 
+  const handleTweetDelete = async (e) => {
+    e?.stopPropagation();
+
+    console.log("deleteClicked", data);
+
+    //filter out the deleted tweet
+
+    const response = await deleteRequest(`/tweet/${tweetId}/delete`);
+
+    const tweets = data.tweets.filter((tweet) => tweet._id !== tweetId);
+
+    tweets.reduce((acc, tweet, i) => {
+      // removing the tweet when deleted
+      if (tweet._id === tweetId) {
+      }
+
+      // removing the comment from parent
+      if (tweet.replies.includes(tweetId)) {
+        const comments = tweet.comments.filter(
+          (comment) => comment.tweet_id !== tweetId
+        );
+        return [...acc, { ...tweet, comments }];
+      }
+
+      return acc;
+    }, []);
+
+    if (response.status === 204) {
+      handleData({ ...data, tweets });
+    } else console.log(response.status);
+  };
+
+  const onUserNameClick = (e) => {
+    e.stopPropagation();
+    navigate(`/user/${tweet.tweeted_by._id}`);
+  };
+
+  function checkIfInclued(array, userId) {
+    return !!array.filter((item) => {
+      if (item._id) return item._id === userId;
+      return item === userId;
+    }).length;
+  }
+
+  // to manage input focus when modal opens
+  useEffect(() => {
+    if (show) inputRef.current.focus();
+  }, [show]);
+
   return (
-    <Container
-      className="tweet post d-flex flex-column px-2 border-2 border-bottom"
-      role="button"
-      onClick={() => {
-        console.log(tweetId);
-      }}
-    >
-      {retweeted && (
+    <>
+      <Container
+        className="tweet d-flex flex-column border-2 border-bottom position-relative"
+        role={!disableOnTweetClick ? "button" : ""}
+        onClick={() => {
+          console.log(tweetId);
+          if (!disableOnTweetClick) navigate(`/tweet/${tweetId}`);
+        }}
+      >
         <Row>
-          <Col className="d-flex align-items-center ms-2">
-            <div className="text-secondary p-1">
-              <RetweetIcon size="xs" />
-            </div>
-            <p className="text-secondary m-0 fs-10">Retweeted by me</p>
+          {retweeted && (
+            <Col className="d-flex align-items-center pt-2">
+              <div className="text-secondary px-1">
+                <RetweetIcon size="xs" />
+              </div>
+              <p className="text-secondary m-0 fs-10">Retweeted by You</p>
+            </Col>
+          )}
+
+          <Col className="w-100 d-flex justify-content-end pt-2">
+            {tweetedBy?._id === userId && (
+              <DeleteIcon
+                id="tweet-delete-icon"
+                className="position-absolute p-2 "
+                onClick={handleTweetDelete}
+              />
+            )}
           </Col>
         </Row>
-      )}
-      <Row className="d-flex flex-fill justify-content-center">
-        <Col className="d-flex justify-content-center">
-          <div className="post-header-img mt-2 me-2">
-            <img
-              width="40px"
-              height="40px"
-              src={profileImageUrl || "/images/profile-placeholder.webp"}
-              className="rounded-circle"
-            />
-          </div>
 
-          <div className="d-flex flex-column align-items-center w-100">
-            <div id="post-header" className="d-flex align-self-start mb-2">
-              <div className="ms-2">
-                <div
-                  id="post-user-info"
-                  className=" d-flex align-items-baseline flex-wrap"
-                >
-                  <p className="m-0 fw-medium text-nowrap text-truncate">
-                    {userName || "@User Name"}
-                  </p>
-
-                  <p className="m-0 text-nowrap ms-1 fs-9 text-truncate fw-medium text-white">
-                    {`- ${createdAt}`}
-                  </p>
-                </div>
-                <p className="m-0">{content || "No content...!!!"}</p>
-              </div>
+        <Row className="d-flex flex-fill justify-content-center pt-2">
+          <Col className="d-flex justify-content-center ">
+            <div className="post-header-img pe-2 mt-1">
+              <img
+                width="40px"
+                height="40px"
+                src={profileImageUrl || "/images/profile-placeholder.webp"}
+                className="rounded-circle"
+              />
             </div>
 
-            {postImage && (
-              <div className="border border-2 w-100 rounded-2 d-flex justify-content-center">
-                <PostImage
-                  src={postImageUrl || "/images/posts-images/10.jpg"}
-                />
-              </div>
-            )}
+            <div className="d-flex flex-column align-items-center w-100">
+              <div id="post-header" className="d-flex align-self-start mb-2">
+                <div className="ms-2">
+                  <div
+                    id="post-user-info"
+                    className=" d-flex align-items-baseline flex-wrap"
+                  >
+                    <p
+                      className="tweet-username m-0 fw-medium text-nowrap text-truncate"
+                      onClick={onUserNameClick}
+                    >
+                      {tweeted_by?.username}
+                    </p>
 
-            <div id="post-options" className="d-flex w-100 p-2">
-              <div className="w-50 d-flex justify-content-between">
-                <div className="tweet-comments d-flex align-items-center m-0 ms-2">
-                  <CommentsIcon
-                    id="tweet-comment-icon"
-                    className={`p-2`}
-                    onClick={handleOnComment}
-                  />
-                  <p className="d-flex align-items-center m-0 ">
-                    {commentsCounter}
-                  </p>
+                    <p className="m-0 text-nowrap ms-1 fs-9 text-truncate fw-medium text-white">
+                      {`- ${new Date(createdAt).toDateString()}`}
+                    </p>
+                  </div>
+                  <p className="m-0">{content || "No content...!!!"}</p>
                 </div>
-                <div className="tweet-retweets d-flex align-items-center m-0 ms-2">
-                  <RetweetIcon
-                    id="tweet-retweet-icon"
-                    className="p-2"
-                    onClick={handleRetweet}
+              </div>
+
+              {postImage && (
+                <div className="border border-2 w-100 rounded-2 d-flex justify-content-center">
+                  <PostImage
+                    src={postImageUrl || "/images/posts-images/10.jpg"}
                   />
-                  <p className="d-flex align-items-center m-0 ">
-                    {retweetsCounter}
-                  </p>
                 </div>
-                <div className="tweet-likes d-flex align-items-center m-0 ms-2">
-                  <LikeIcon
-                    id="tweet-like-icon"
-                    className={`p-2 ${liked && "liked"}`}
-                    liked={liked}
-                    onClick={handleLiked}
-                  />
-                  <p className="d-flex align-items-center m-0">
-                    {likesCounter}
-                  </p>
+              )}
+
+              <div id="post-options" className="d-flex w-100 py-2">
+                <div className="w-50 d-flex justify-content-between">
+                  <div className="tweet-comments d-flex align-items-center ">
+                    <CommentsIcon
+                      id="tweet-comment-icon"
+                      className={`p-2`}
+                      onClick={handleOnComment}
+                    />
+                    <p className="d-flex align-items-center m-0">
+                      {commentsCounter}
+                    </p>
+                  </div>
+                  <div className="tweet-retweets d-flex align-items-center">
+                    <RetweetIcon
+                      id="tweet-retweet-icon"
+                      className={`p-2 ${retweeted && "retweeted"}`}
+                      onClick={handleRetweet}
+                    />
+                    <p className="d-flex align-items-center m-0">
+                      {retweetsCounter}
+                    </p>
+                  </div>
+                  <div className="tweet-likes d-flex align-items-center">
+                    <LikeIcon
+                      id="tweet-like-icon"
+                      className={`p-2 ${liked && "liked"}`}
+                      liked={liked}
+                      onClick={handleLiked}
+                    />
+                    <p className="d-flex align-items-center m-0">
+                      {likesCounter}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </Container>
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleOnSubmit}>
           <Modal.Header closeButton>
@@ -264,11 +328,11 @@ export default function Tweet({
                   className=" d-flex align-items-baseline flex-wrap"
                 >
                   <p className="m-0 fw-medium text-nowrap text-truncate">
-                    {userName || "@User Name"}
+                    {tweetedBy?.username || "@User Name"}
                   </p>
 
                   <p className="m-0 text-nowrap ms-1 fs-9 text-truncate fw-medium">
-                    {`- ${createdAt}`}
+                    {`- ${new Date(createdAt).toDateString()}`}
                   </p>
                 </div>
                 <div>
@@ -289,6 +353,7 @@ export default function Tweet({
                 as="textarea"
                 rows={3}
                 placeholder="Write your tweet"
+                ref={inputRef}
               />
             </Form.Group>
           </Modal.Body>
@@ -306,6 +371,6 @@ export default function Tweet({
           </Modal.Footer>
         </Form>
       </Modal>
-    </Container>
+    </>
   );
 }

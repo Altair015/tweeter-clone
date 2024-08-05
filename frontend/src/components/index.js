@@ -1,16 +1,6 @@
 import { lazy } from "react";
 
-// Pages
-export const Home = lazy(() => import("./pages/home/Home"));
-export const UserProfile = lazy(() =>
-  import("./pages/user-profile/UserProfile")
-);
-export const PageNotFound = lazy(() =>
-  import("./pages/page-not-found/PageNotFound")
-);
-export const Contact = lazy(() => import("./pages/contact/Contact"));
-export const Login = lazy(() => import("./login/Login"));
-export const SignUp = lazy(() => import("./sign-up/SignUp"));
+// lazy-Components
 export const Layout = lazy(() => import("./layout/Layout"));
 
 // Components
@@ -23,7 +13,6 @@ export { default as Loader } from "./loader/Loader";
 export { default as NavLink } from "./nav-link/NavLink";
 export { default as UserInfo } from "./user-info/UserInfo";
 export { default as NewTweetButton } from "./new-tweet-button/NewTweetButton";
-// export { default as Posts } from "./posts/Posts";
 export { default as Tweet } from "./tweet/Tweet";
 export { default as PostImage } from "./post-image/PostImage";
 
@@ -36,3 +25,10 @@ export { default as CommentsIcon } from "./icons/CommentsIcon";
 export { default as RetweetIcon } from "./icons/RetweetIcon";
 export { default as LikeIcon } from "./icons/LikeIcon";
 export { default as FileUploadIcon } from "./icons/FileUploadIcon";
+export { default as DeleteIcon } from "./icons/DeleteIcon";
+export { default as EditBrushIcon } from "./icons/EditBrushIcon";
+export { default as PaintBrushIcon } from "./icons/PaintBrushIcon";
+export { default as CalenderIcon } from "./icons/CalenderIcon";
+export { default as CakeIcon } from "./icons/CakeIcon";
+export { default as LocationIcon } from "./icons/LocationIcon";
+export { default as EditPenIcon } from "./icons/EditPenIcon";

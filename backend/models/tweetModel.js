@@ -9,21 +9,21 @@ const commentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    tweet_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tweet",
+    },
   },
   { timestamps: true }
 );
 
 const tweetSchema = new mongoose.Schema(
   {
-    // parent_tweet: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Tweet",
-    //   default: null,
-    // },
     content: {
       type: String,
       required: true,
     },
+    comments: [commentSchema],
     image: {
       type: String,
     },
@@ -33,7 +33,11 @@ const tweetSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    comments: [commentSchema],
+    parent_tweet: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tweet",
+      default: null,
+    },
     replies: [
       {
         type: mongoose.Schema.Types.ObjectId,

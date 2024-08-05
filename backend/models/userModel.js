@@ -32,7 +32,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    proile_img: {
+    profile_pic: {
+      type: String,
+      default: null,
+    },
+    profile_cover: {
       type: String,
       default: null,
     },

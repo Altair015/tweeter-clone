@@ -2,11 +2,12 @@ import React from "react";
 import Col from "react-bootstrap/esm/Col";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
+import "./style.css";
 
 export default function UserInfo(props) {
   return (
-    <Container {...props} className="p-2 sticky-bottom" role="button">
-      <Row className="d-flex align-items-center m-0 rounded p-2">
+    <Container {...props} className="sticky-bottom" role="button">
+      <Row className="user-info d-flex align-items-center m-0 rounded p-2 mb-2">
         <img
           src="/images/profile-placeholder.svg"
           className="p-0 rounded-circle w-100 h-100"

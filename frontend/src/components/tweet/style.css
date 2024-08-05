@@ -3,16 +3,17 @@ hover:hover only targets devices which supports hover interaction
 pointer-fine adds an extra layer to support on device which support fine pointer devices(mouse) 
 */
 @media (hover: hover) and (pointer: fine) {
-  .tweet-likes:hover {
-    transition: color 100ms;
-    color: rgb(182, 0, 0);
+  .tweet-username:hover {
+    text-decoration: underline;
+    color: #1d9bf0;
   }
 
-  #tweet-like-icon:hover,
-  #tweet-retweet-icon:hover,
-  #tweet-comment-icon:hover {
-    background-color: hsla(0, 0%, 100%, 0.407);
+  #tweet-like-icon,
+  #tweet-retweet-icon,
+  #tweet-comment-icon,
+  #tweet-delete-icon {
     border-radius: 50%;
+    transition: 300ms;
   }
 
   #tweet-like-icon:hover {
@@ -28,6 +29,11 @@ pointer-fine adds an extra layer to support on device which support fine pointer
   #tweet-comment-icon:hover {
     color: #1d9bf0;
     background-color: #1d9cf026;
+  }
+
+  #tweet-delete-icon:hover {
+    color: #f01d3d;
+    background-color: #f01d3d28;
   }
 }
 

@@ -43,7 +43,7 @@ export default function useAxios() {
   const get = async (url, config = {}) => {
     try {
       const response = await apiClient.get(url, config);
-      return response.data;
+      return response;
     } catch (error) {
       if (error.response.status == 401) {
         // cookie is not availble, remove the token from localstorage, now re-login
@@ -51,7 +51,7 @@ export default function useAxios() {
         // to unmount the providers,and reset react-dom so that it should point to login
         window.location.reload();
       }
-      throw error;
+      return error.response;
     }
   };
 
@@ -66,7 +66,7 @@ export default function useAxios() {
   const post = async (url, data = {}, config = {}) => {
     try {
       const response = await apiClient.post(url, data, config);
-      return response.data;
+      return response;
     } catch (error) {
       console.log(error);
       if (error.response.status == 401) {
@@ -75,7 +75,6 @@ export default function useAxios() {
         // to unmount the providers,and reset react-dom so that it should point to login
         window.location.reload();
       }
-      throw error;
     }
   };
 
@@ -90,9 +89,15 @@ export default function useAxios() {
   const put = async (url, data = {}, config = {}) => {
     try {
       const response = await apiClient.put(url, data, config);
-      return response.data;
+      return response;
     } catch (error) {
-      throw error;
+      console.log(error);
+      if (error.response.status == 401) {
+        // cookie is not availble, remove the token from localstorage, now re-login
+        localStorage.removeItem("auth");
+        // to unmount the providers,and reset react-dom so that it should point to login
+        window.location.reload();
+      }
     }
   };
 
@@ -106,10 +111,16 @@ export default function useAxios() {
   const deleteRequest = async (url, config = {}) => {
     try {
       const response = await apiClient.delete(url, config);
-      return response.data;
+      return response;
     } catch (error) {
-      throw error;
+      console.log(error);
+      if (error.response.status == 401) {
+        // cookie is not availble, remove the token from localstorage, now re-login
+        localStorage.removeItem("auth");
+        // to unmount the providers,and reset react-dom so that it should point to login
+        window.location.reload();
+      }
     }
   };
-  return { get, post, put, delete: deleteRequest };
+  return { get, post, put, deleteRequest };
 }

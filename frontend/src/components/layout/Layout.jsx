@@ -3,7 +3,8 @@ import Col from "react-bootstrap/esm/Col";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import { useNavigate } from "react-router-dom";
-import { Header, Login, Logo, Main, Nav, UserInfo } from "../../components";
+import { Header, Logo, Main, Nav, UserInfo } from "../../components";
+import { Login } from "../../pages";
 import { useAuth } from "../../hooks";
 
 export default function Layout() {
