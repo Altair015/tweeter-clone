@@ -1,0 +1,79 @@
+Created the directory structure using CHATGPT.
+Linked the root directory to the GitHub.
+Created the directories backend and frontend.
+
+Added the proxy for the backend in vite-config.js file in the client directory.
+
+Backend:
+Created the package.json file using npm init cmd.
+Created db.js to do the mongoDB setup and using in the entry ponint of the backend server.js
+Created routes and added V_1 as sub directory so that routes versioning can be done, as part of good coding practices.
+Created express routing in the routes dir with respective routing required as part of the project.
+Created the directories models, controllers, routes, middlewares, public, uploads, services, db and utils. 
+Installed the libraries: mongoose, nodemon, morgan, multer, nodemon bcrypt, dotenv, express, jsonwebtoken, cookie-parser and mongoose.
+Created the cluster on the MongoDB Atlas.
+Setup the environment variables PORT ,MONGO_CONNECTION_URI, JWT_SECRET in the .env file.
+Setup the backend server using the express and mongoose.
+Tested if the backend server is running using the npm run dev.
+Created the UserModel in UserModel.js file in the models directory using mongoose.
+Created the SignUp, SignIn controllers in the authController.js file in the controllers directory.
+Created the post route "/auth/signup" in the authRoutes.js file in the routes directory. 
+Tested the Sign Up functionalities using PostMan.
+Created the post route "/auth/signin" in the authRoutes.js file in the routes directory. 
+Tested the Sign In functionalities using PostMan.
+Created the protected.js file in the directory "middlewares" to implement the JWT authentication.
+Created uploaded folder in public dir, to hold the image files comming from the UI in the formData.
+Created multerSetup.js as middleware and for each user if the user uploads profile_pic or profile_cover, that will be saved as user_id-profile_pic/profile_cover.ext to reduce the memory consumption on each uploads when the user changes its cover page or profile pic. For tweets the tweets will be saved with randomly generated name.ext.
+Tested using Postman, without added ValidateJWT middleware.
+Created hashingPassword function in utils dir for hashing the password, so that if the db is compromized the passwords will not be in their original state.
+Created extraRoutes for serve images from backend to UI.
+Created tweetsRoutes with all mentioned routes in the project discription with try/catch and with all proper http status and responses.
+
+Forntend:
+Created using vite as bundler npm vite@latest cmd as per vite docs.
+Installed the following libraries
+	"@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-regular-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2", [for icons]
+    "axios": "^1.7.2",  [frontend request client]
+    "bootstrap": "^5.3.3",
+    "date-fns": "^3.6.0", [for managing the date formates required for input date element]
+    "react-bootstrap": "^2.10.2",  [for bootstrap components like Models, FormGroup]
+    "react-router-dom": "^6.23.1",  [for front dummy routing]
+    "react-toastify": "^10.0.5"  [for managing the alerts and validations]
+Created .env
+	VITE_BACKEND_URI="http://<host:port>"
+	VITE_BACKEND_IDENTIFIER="/api/v_1" 
+	VITE_BACKEND_IMAGE_URI="http://<host:port>/api/v_1/images"
+Created Routing using CreatedBrowserRoute from react-router-dom, with the same end-points as backend in most of the cases.
+Created Login.jsx for login, route /signin.
+Created SignUp.jsx page for signing up an initial user and there is no JWT validation applied on both Login and SignUp page.
+Created Layout.js as the main frame of the application with contains sidebar navigation, logo, header and main section.
+Created Main.jsx where the react-router-dom <Outlet/> component renders.
+Created the following contexts, Auth, Store and Toastify.
+Auth Context is used to manange the token, when logged in, auth named key will be stored as it was part the login request response, which contains the token and the user id. then is set in the context using the setAuth function which stores token and user id in the localstorage. The need to store token and user id in the localstorage is, when the user refreshes the page, the all contexts will be set to there initial states and will loose the user id, which is required in various initial pages to maintain the web flow.
+To manage the inter component status changes, created the Dataprovider and a custom hook to access/manage the state.
+As the user Login's, the user will be navigatied to /home, hitting /signin route at backend and sets the user_id and token in the cookie.
+Created Nav.jsx which the side bar Navigation panel, having three NavLink.jsx components, Home, Profile and Logout, with their respective pages.
+Created Header.jsx.
+Created NewTweetButton.jsx, which present in the Header.js, when clicked a modal open and there will be two inputs, first will take text as input, where user can create new post and second is file Upload icon which takes the file as input, and only accepts the mentioned format as per requirement. And in the modal footer there Tweet button is there to submit the request to backend(/tweet/new (post)).  
+Created Home.jsx component inside pages dir, where only root level tweets are loaded, by hitting a get request "/tweet". A separate state will be managing the interactions at home page.
+On Clicking on the chat icon will open the modal/dialog with a form-field, which hit /tweet/:tweet_id/reply.
+When the user clicks on the username available in each tweets, it is redirected to the the user profile page, and hits /user/:user_id at the backed, and the page is available in pages dir with UserProfile.jsx as name.
+If the user has cliked on the some other user's username, the user will see Follow/Unfollow button and the profile pic and Profile cover is not not editable as per the project requirements.
+If the user clicks on the its own username in the tweet, he will be redirected to the same page with edit profile button and will be able to edit the proflic pic and profile cover.  
+Created Tweet.jsx component inside the components dir, which is used in Home page, using map over the fetching tweets.
+Each Tweet is clickable on Home page, which redirects to the specific tweet with there replies if any routing to /tweet/:tweet_id (frontend and backend(get request)).
+If the user clicks on the User Profile link available in the side bar, will be navigated to /profile route.
+If user Clicks on the LogOut link the auth key will be removed from the localStorage and /signout endpoint at the backend will remove the auth key from cookie. And page is reloaded when token is not found will navigated to /login.
+
+
+
+
+
+ 
+ 
+
+
