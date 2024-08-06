@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         element: <Tweet />,
       },
       {
-        path: "resource",
+        path: "resourcenotfound",
         element: <ResourceNotFound />,
       },
       {

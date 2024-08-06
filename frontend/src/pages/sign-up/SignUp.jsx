@@ -6,8 +6,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useToastify } from "../../hooks";
 
 const SignUp = () => {
+  const { setToastContent } = useToastify();
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
 
@@ -18,7 +20,7 @@ const SignUp = () => {
       e.stopPropagation();
     }
     e.preventDefault();
-    setValidated(true);
+    setValidated(false);
 
     const VITE_BACKEND_IDENTIFIER = import.meta.env.VITE_BACKEND_IDENTIFIER;
 
@@ -28,14 +30,30 @@ const SignUp = () => {
     const password = e.target.password.value;
     const confirmPassword = e.target.confirmPassword.value;
 
-    if (password === confirmPassword) {
-      const response = await axios.post(
-        `${VITE_BACKEND_IDENTIFIER}/auth/signup`,
-        { fullname, email, username, password }
-      );
-      if (response) {
-        navigate("/login");
-      }
+    if (!fullname || !email || !username || !password || !confirmPassword) {
+      setToastContent({
+        content: "All fields are required",
+        type: "warning",
+        duration: 5000,
+      });
+      return;
+    }
+
+    if (!(password === confirmPassword)) {
+      setToastContent({
+        content: "password and confirm password should match",
+        type: "warning",
+        duration: 5000,
+      });
+      return;
+    }
+
+    const response = await axios.post(
+      `${VITE_BACKEND_IDENTIFIER}/auth/signup`,
+      { fullname, email, username, password }
+    );
+    if (response) {
+      navigate("/login");
     }
   };
 
@@ -52,7 +70,7 @@ const SignUp = () => {
               md={4}
               className="signup-logo-section bg-primary d-flex align-items-center justify-content-center rounded-start-2"
             >
-              <h1>Logo</h1>
+              <h1>Chitter</h1>
             </Col>
             <Col
               xs={12}

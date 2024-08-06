@@ -5,7 +5,7 @@ export default function ResourceNotFound() {
   const navigate = useNavigate();
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center h-100 bg-danger">
+    <div className="d-flex flex-column justify-content-center align-items-center h-100">
       <div className=" d-flex align-items-end">
         <h1 className="display-3 lh-1">Resource Not Found&nbsp;</h1>
         <h1 className="display-6 lh-base m-0 fw-bold">404</h1>

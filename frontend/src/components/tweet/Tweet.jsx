@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 import { CommentsIcon, DeleteIcon, LikeIcon, PostImage, RetweetIcon } from "..";
-import { useAxios } from "../../hooks";
+import { useAxios, useToastify } from "../../hooks";
 import "./style.css";
 
 export default function Tweet({
@@ -15,6 +15,7 @@ export default function Tweet({
   data,
   tweet,
   handleData,
+  disableDelete = false,
 }) {
   let profileImageUrl = null;
   let postImageUrl = null;
@@ -45,6 +46,7 @@ export default function Tweet({
   const [tweetedBy] = useState(tweeted_by);
 
   const { post, deleteRequest } = useAxios();
+  const { setToastContent } = useToastify();
 
   // user-profile image
   if (profileImage)
@@ -63,6 +65,15 @@ export default function Tweet({
 
     const content = e.target["new-tweet-content"].value;
 
+    if (!content) {
+      setToastContent({
+        content: "Empty reply submission",
+        type: "Warning",
+        duration: 2000,
+      });
+      return;
+    }
+
     if (content) {
       // user_id can be obtained from the cookie
       const response = await post(`/tweet/${tweetId}/reply`, { content });
@@ -78,6 +89,11 @@ export default function Tweet({
 
         handleData({ ...data, tweets });
         setCommentsCounter((pre) => pre + 1);
+        setToastContent({
+          content: "Replied successfully",
+          type: "success",
+          duration: 2000,
+        });
         setShow(false);
       }
     }
@@ -105,6 +121,11 @@ export default function Tweet({
         handleData({ ...data, tweets });
         setLikesCounter((pre) => pre + 1);
         setLiked(true);
+        setToastContent({
+          content: "Liked successfully",
+          type: "success",
+          duration: 2000,
+        });
       }
     }
 
@@ -123,6 +144,11 @@ export default function Tweet({
         handleData({ ...data, tweets });
         setLikesCounter((pre) => pre - 1);
         setLiked(false);
+        setToastContent({
+          content: "Unliked successfully",
+          type: "success",
+          duration: 2000,
+        });
       }
     }
   };
@@ -152,38 +178,38 @@ export default function Tweet({
       setRetweeted(true);
       handleData({ ...data, tweets });
       setRetweetsCounter((pre) => pre + 1);
+      setToastContent({
+        content: "Retweeted successfully",
+        type: "success",
+        duration: 2000,
+      });
     }
   };
 
   const handleTweetDelete = async (e) => {
     e?.stopPropagation();
 
-    console.log("deleteClicked", data);
-
-    //filter out the deleted tweet
-
     const response = await deleteRequest(`/tweet/${tweetId}/delete`);
 
+    //filter out the deleted tweet
     const tweets = data.tweets.filter((tweet) => tweet._id !== tweetId);
 
-    tweets.reduce((acc, tweet, i) => {
-      // removing the tweet when deleted
-      if (tweet._id === tweetId) {
-      }
+    // removing the comment from the parent tweet
+    if (tweets[0]?.comments) {
+      const updatedComments = tweets[0].comments.filter(
+        (comment) => comment.tweet_id !== tweetId
+      );
 
-      // removing the comment from parent
-      if (tweet.replies.includes(tweetId)) {
-        const comments = tweet.comments.filter(
-          (comment) => comment.tweet_id !== tweetId
-        );
-        return [...acc, { ...tweet, comments }];
-      }
-
-      return acc;
-    }, []);
+      tweets[0].comments = updatedComments;
+    }
 
     if (response.status === 204) {
       handleData({ ...data, tweets });
+      setToastContent({
+        content: "Tweet deleted successfully",
+        type: "success",
+        duration: 2000,
+      });
     } else console.log(response.status);
   };
 
@@ -207,7 +233,9 @@ export default function Tweet({
   return (
     <>
       <Container
-        className="tweet d-flex flex-column border-2 border-bottom position-relative"
+        className={`${
+          !disableOnTweetClick ? "tweet" : ""
+        } d-flex flex-column border-2 border-bottom position-relative`}
         role={!disableOnTweetClick ? "button" : ""}
         onClick={() => {
           console.log(tweetId);
@@ -218,17 +246,17 @@ export default function Tweet({
           {retweeted && (
             <Col className="d-flex align-items-center pt-2">
               <div className="text-secondary px-1">
-                <RetweetIcon size="xs" />
+                <RetweetIcon size="xs" className="text-white" />
               </div>
-              <p className="text-secondary m-0 fs-10">Retweeted by You</p>
+              <p className="text-white m-0 fs-10">Retweeted by You</p>
             </Col>
           )}
 
           <Col className="w-100 d-flex justify-content-end pt-2">
-            {tweetedBy?._id === userId && (
+            {!disableDelete && tweetedBy?._id === userId && (
               <DeleteIcon
                 id="tweet-delete-icon"
-                className="position-absolute p-2 "
+                className="position-absolute p-2"
                 onClick={handleTweetDelete}
               />
             )}
@@ -254,7 +282,7 @@ export default function Tweet({
                     className=" d-flex align-items-baseline flex-wrap"
                   >
                     <p
-                      className="tweet-username m-0 fw-medium text-nowrap text-truncate"
+                      className="tweet-username m-0 fw-medium text-nowrap text-truncate text-white"
                       onClick={onUserNameClick}
                     >
                       {tweeted_by?.username}
@@ -264,7 +292,9 @@ export default function Tweet({
                       {`- ${new Date(createdAt).toDateString()}`}
                     </p>
                   </div>
-                  <p className="m-0">{content || "No content...!!!"}</p>
+                  <p className="m-0 text-white">
+                    {content || "No content...!!!"}
+                  </p>
                 </div>
               </div>
 
@@ -281,20 +311,20 @@ export default function Tweet({
                   <div className="tweet-comments d-flex align-items-center ">
                     <CommentsIcon
                       id="tweet-comment-icon"
-                      className={`p-2`}
+                      className={`p-2 `}
                       onClick={handleOnComment}
                     />
-                    <p className="d-flex align-items-center m-0">
+                    <p className="d-flex align-items-center m-0 text-white">
                       {commentsCounter}
                     </p>
                   </div>
                   <div className="tweet-retweets d-flex align-items-center">
                     <RetweetIcon
                       id="tweet-retweet-icon"
-                      className={`p-2 ${retweeted && "retweeted"}`}
+                      className={`p-2 ${retweeted && "retweeted"} `}
                       onClick={handleRetweet}
                     />
-                    <p className="d-flex align-items-center m-0">
+                    <p className="d-flex align-items-center m-0 text-white">
                       {retweetsCounter}
                     </p>
                   </div>
@@ -305,7 +335,7 @@ export default function Tweet({
                       liked={liked}
                       onClick={handleLiked}
                     />
-                    <p className="d-flex align-items-center m-0">
+                    <p className="d-flex align-items-center m-0 text-white">
                       {likesCounter}
                     </p>
                   </div>

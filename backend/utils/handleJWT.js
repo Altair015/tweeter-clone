@@ -24,6 +24,6 @@ export function generateJWT(userId, res) {
   return token;
 }
 
-export function validateJWT(token) {
-  const decodedUserId = jsonwebtoken.verify(token, JWT_SECRET);
-}
+// export function validateJWT(token) {
+//   const decodedUserId = jsonwebtoken.verify(token, JWT_SECRET);
+// }

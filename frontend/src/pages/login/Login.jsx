@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -7,53 +6,76 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import "./style.css";
 
-import { ToastContainer, toast } from "react-toastify";
-import { useAuth } from "../../hooks";
+import { useAuth, useAxios, useToastify } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { auth, setAuth } = useAuth();
+  const { post } = useAxios();
+  const { setToastContent } = useToastify();
   const [disableSubmitButton, setdisableSubmitButton] = useState(false);
-  const VITE_BACKEND_IDENTIFIER = import.meta.env.VITE_BACKEND_IDENTIFIER;
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setdisableSubmitButton(true);
 
     const username = e.target.username.value;
     const password = e.target.password.value;
 
-    try {
-      await toast.promise(
-        axios.post(`${VITE_BACKEND_IDENTIFIER}/auth/signin`, {
-          username,
-          password,
-        }),
-        {
-          pending: "In process",
-          success: {
-            render({ data: success }) {
-              // setting token in the authContext
-              console.log(success.data);
-              const { token, user_id } = success.data;
-              setAuth({ ...auth, token, user_id });
+    if (password && !username) {
+      setToastContent({
+        content: "username can not be empty",
+        type: "error",
+        duration: 5000,
+      });
+      return;
+    } else if (username && !password) {
+      setToastContent({
+        content: "password can not be empty",
+        type: "error",
+        duration: 5000,
+      });
+      return;
+    } else if (!username || !password) {
+      setToastContent({
+        content: "username and password can not be empty",
+        type: "error",
+        duration: 5000,
+      });
+      return;
+    }
 
-              navigate("/home");
-              return "Successfully logged in";
-            },
-          },
-          error: {
-            render({ data }) {
-              setdisableSubmitButton(false);
-              return data.response.data.message;
-            },
-          },
-        }
-      );
+    try {
+      setdisableSubmitButton(true);
+
+      const response = await post(`/auth/signin`, {
+        username,
+        password,
+      });
+      console.log(response);
+
+      if (response?.status === 200) {
+        const { token, user_id } = response.data;
+        setAuth({ ...auth, token, user_id });
+
+        navigate("/home");
+
+        setToastContent({
+          content: "Login Success",
+          type: "success",
+          duration: 2000,
+        });
+        setdisableSubmitButton(false);
+      }
     } catch (error) {
-      // toast.error(error.response.data.message);
       console.log(error);
+      setToastContent({
+        content: error.message,
+        type: "error",
+        duration: 5000,
+      });
+      setdisableSubmitButton(false);
     }
   };
 
@@ -68,9 +90,10 @@ const Login = () => {
             <Col
               xs={12}
               md={4}
-              className="login-logo-section bg-primary d-flex align-items-center justify-content-center rounded-start-2 rounded-md-start-0 rounded-md-top-2"
+              className="login-logo-section bg-primary d-flex align-items-center justify-content-center rounded-start-2 rounded-md-start-0 rounded-md-top-2 fw-medium"
+              style={{ minHeight: "50px" }}
             >
-              Chitter
+              <h1>Chitter</h1>
             </Col>
             <Col
               xs={12}
@@ -106,7 +129,7 @@ const Login = () => {
           </Row>
         </Col>
       </Row>
-      <ToastContainer autoClose={2000} />
+      {/* <ToastContainer autoClose={2000} /> */}
     </Container>
   );
 };

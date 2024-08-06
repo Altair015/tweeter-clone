@@ -1,3 +1,11 @@
+3 - layer-archietecture (Reference CHATGPT,Youtube)
+- Frontend (ReactJs)
+- Backend (NodeJs)
+- DB (Mongo DB)
+
+Backend high level design
+=========================
+
 application design :
     controllers : bussiness logic for each route
     models : mongo Schema's
@@ -23,3 +31,7 @@ application design :
 routing design :
     server(/api)->route(/v_<version no>)->route(/[auth,user])
  
+
+
+Frontend high level design
+==========================

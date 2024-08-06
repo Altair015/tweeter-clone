@@ -23,7 +23,7 @@ export const createTweet = async (req, res) => {
     if (tweet._id) {
       const dbResponse = await Tweet.findById(tweet._id).populate({
         path: "tweeted_by",
-        select: "username profile_img",
+        select: "username profile_pic",
       });
 
       res.status(200).json({
@@ -42,7 +42,7 @@ export const getAllTweets = async (req, res) => {
     const tweets = await Tweet.find()
       .populate({
         path: "tweeted_by",
-        select: "username proile_img",
+        select: "username profile_pic",
       })
       .populate({ path: "retweeted_by", select: "username fullname" })
       .sort({ createdAt: -1 })
@@ -99,13 +99,14 @@ export const getTweet = async (req, res) => {
     const tweet = await Tweet.findById(tweet_id)
       .populate({
         path: "tweeted_by",
-        select: "username proile_img",
+        select: "username profile_pic",
       })
       .populate({
         path: "replies",
+        options: { sort: { createdAt: -1 } },
         populate: {
           path: "tweeted_by",
-          select: "username proile_img",
+          select: "username profile_pic",
         },
       });
 
@@ -157,7 +158,7 @@ export const replyTweet = async (req, res) => {
       }
     ).populate({
       path: "tweeted_by",
-      select: "username proile_img",
+      select: "username profile_pic",
     });
 
     const painObject = tweet.toJSON();
@@ -184,7 +185,7 @@ export const likeTweet = async (req, res) => {
     { new: true }
   ).populate({
     path: "tweeted_by",
-    select: "username proile_img",
+    select: "username profile_pic",
   });
 
   res.status(200).json({ tweet });
@@ -209,7 +210,7 @@ export const dislikeTweet = async (req, res) => {
     { new: true }
   ).populate({
     path: "tweeted_by",
-    select: "username proile_img",
+    select: "username profile_pic",
   });
 
   res.status(200).json({ tweet });
@@ -236,7 +237,7 @@ export const retweet = async (req, res) => {
     )
       .populate({
         path: "tweeted_by",
-        select: "username proile_img",
+        select: "username profile_pic",
       })
       .populate({
         path: "retweeted_by",

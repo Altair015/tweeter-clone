@@ -13,7 +13,6 @@ export default function TweetPage() {
   const { get } = useAxios();
 
   const [data, setData] = useState(null);
-  const [tweet, settweet] = useState(null);
 
   const handleData = (newData) => {
     setData({ ...newData });
@@ -25,13 +24,10 @@ export default function TweetPage() {
     if (response.status === 200) {
       setData({
         user: { userId: user_id },
-        tweets: [...response.data.replies],
-        tweet: response.data,
+        tweets: [response.data, ...response.data.replies],
       });
-
-      // settweet(response.data.filter());
     } else if (response.status === 404) {
-      navigate("/resource");
+      navigate("/resourcenotfound");
     } else {
       navigate("/home");
     }
@@ -45,35 +41,48 @@ export default function TweetPage() {
     };
   }, [tweet_id]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data?.tweets]);
+  // useEffect(() => {
+  //   console.log("yaahooo", data);
+  //   setData({ ...data, tweets: data?.tweets });
+  // }, [data?.tweets]);
 
   return (
     <Container className="h-100">
       <Row className="h-100">
-        <Col className="p-0 bg-danger h-100">
-          {data?.tweet ? (
+        <Col className="p-0 h-100">
+          {data?.tweets ? (
             <>
               <Tweet
-                key={`tweet-${data.tweet._id}`}
-                disableOnTweetClick
-                tweet={data.tweet}
+                key={`tweet-${data.tweets[0]._id}-${new Date().getTime()}`}
+                tweet={data.tweets[0]}
                 data={data}
                 handleData={handleData}
+                disableOnTweetClick={data.tweets[0]._id === tweet_id}
+                disableDelete={data.tweets[0]._id === tweet_id}
               />
-              {data.tweets.map((tweet) => {
-                console.log(tweet);
-                return (
-                  <Tweet
-                    key={`tweet-replies-${tweet._id}`}
-                    tweet={tweet}
-                    data={data}
-                    handleData={handleData}
-                    // onCommentSubmit=
-                  />
-                );
-              })}
+              <div className="tweet-replies d-flex flex-column m-2">
+                <h6 className="text-white">Replies</h6>
+                {data.tweets.map((tweet, index) => {
+                  if (index)
+                    return (
+                      <div
+                        className="border border-2 border-bottom-0 mb-2 rounded rounded-2"
+                        key={`tweet-wrapper-${
+                          tweet._id
+                        }-${new Date().getTime()}`}
+                      >
+                        <Tweet
+                          key={`tweet-${tweet._id}-${new Date().getTime()}`}
+                          tweet={tweet}
+                          data={data}
+                          handleData={handleData}
+                          disableOnTweetClick={tweet._id === tweet_id}
+                          disableDelete={tweet._id === tweet_id}
+                        />
+                      </div>
+                    );
+                })}
+              </div>
             </>
           ) : (
             <Loader />

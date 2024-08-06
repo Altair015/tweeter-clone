@@ -1,6 +1,28 @@
 import axios from "axios";
+import { useToastify } from "../hooks";
 
 export default function useAxios() {
+  const { setToastContent } = useToastify();
+
+  const throwError = (message) =>
+    setToastContent({
+      content: message,
+      type: "error",
+    });
+
+  const handle401 = (error) => {
+    if (error.response.status != 401) return;
+
+    throwError(error.response.data.message);
+
+    // cookie is not availble, remove the token from localstorage, now re-login
+    localStorage.removeItem("auth");
+    // to unmount the providers,and reset react-dom so that it should point to login
+    setTimeout(() => {
+      window.location.reload();
+    }, [2000]);
+  };
+
   const apiClient = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_IDENTIFIER,
     withCredentials: true, // so that the cookie goes with every request
@@ -45,12 +67,7 @@ export default function useAxios() {
       const response = await apiClient.get(url, config);
       return response;
     } catch (error) {
-      if (error.response.status == 401) {
-        // cookie is not availble, remove the token from localstorage, now re-login
-        localStorage.removeItem("auth");
-        // to unmount the providers,and reset react-dom so that it should point to login
-        window.location.reload();
-      }
+      handle401(error);
       return error.response;
     }
   };
@@ -69,12 +86,8 @@ export default function useAxios() {
       return response;
     } catch (error) {
       console.log(error);
-      if (error.response.status == 401) {
-        // cookie is not availble, remove the token from localstorage, now re-login
-        localStorage.removeItem("auth");
-        // to unmount the providers,and reset react-dom so that it should point to login
-        window.location.reload();
-      }
+      handle401(error);
+      return error.response;
     }
   };
 
@@ -92,12 +105,8 @@ export default function useAxios() {
       return response;
     } catch (error) {
       console.log(error);
-      if (error.response.status == 401) {
-        // cookie is not availble, remove the token from localstorage, now re-login
-        localStorage.removeItem("auth");
-        // to unmount the providers,and reset react-dom so that it should point to login
-        window.location.reload();
-      }
+      handle401(error);
+      return error.response;
     }
   };
 
@@ -114,13 +123,10 @@ export default function useAxios() {
       return response;
     } catch (error) {
       console.log(error);
-      if (error.response.status == 401) {
-        // cookie is not availble, remove the token from localstorage, now re-login
-        localStorage.removeItem("auth");
-        // to unmount the providers,and reset react-dom so that it should point to login
-        window.location.reload();
-      }
+      handle401(error);
+      return error.response;
     }
   };
+
   return { get, post, put, deleteRequest };
 }

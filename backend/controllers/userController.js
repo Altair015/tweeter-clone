@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/userModel.js";
+import Tweet from "../models/tweetModel.js";
 
 export const getUserData = async (req, res) => {
   try {
@@ -7,7 +8,12 @@ export const getUserData = async (req, res) => {
 
     const user = await User.findById(user_id).select("-password");
 
-    res.status(200).json(user);
+    const tweets = await Tweet.find({ tweeted_by: user_id }).populate(
+      "tweeted_by",
+      "-password"
+    );
+
+    res.status(200).json({ tweets, user });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: error.message });
@@ -32,7 +38,7 @@ export const editUserProfile = async (req, res) => {
       { _id: user_id },
       { $set: update },
       { new: true }
-    );
+    ).select("-password");
 
     res.status(201).json(user);
   } catch (error) {

@@ -3,6 +3,10 @@ hover:hover only targets devices which supports hover interaction
 pointer-fine adds an extra layer to support on device which support fine pointer devices(mouse) 
 */
 @media (hover: hover) and (pointer: fine) {
+  .tweet:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
   .tweet-username:hover {
     text-decoration: underline;
     color: #1d9bf0;

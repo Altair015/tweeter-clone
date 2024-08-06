@@ -4,7 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import connectDB from "./db/connection.js";
 import routers from "./routes/routers.js";
-import cors from "cors";
+// import cors from "cors";
 
 const server = express();
 
@@ -18,13 +18,9 @@ server.use(cookieParser());
 server.use("/public", express.static("public"));
 
 // needed to be removed only for testing
-server.use(cors());
+// server.use(cors());
 
 server.use("/api", routers);
-
-server.post("/api/test/:test_params", (req, res) => {
-  console.log(req.files, req.file, req.params, req.body);
-});
 
 server.listen(PORT, () => {
   console.log(`express running on ${PORT} `);

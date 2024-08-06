@@ -90,7 +90,17 @@ export async function signIn(req, res) {
   }
 }
 
-// was not required,
-// though just to add another security feature,
-// so that it should unset the jwt from backend
-export async function signOut(req, res) {}
+export async function signOut(req, res) {
+  try {
+    res.cookie("auth", null, {
+      maxAge: 0,
+      httpOnly: true,
+    });
+    res.status(200).send("Successfully Logged Out");
+  } catch (error) {
+    res.status(500).send({
+      status: "failure",
+      error: error.message,
+    });
+  }
+}

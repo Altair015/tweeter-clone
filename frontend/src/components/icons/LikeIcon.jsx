@@ -6,6 +6,6 @@ export default function LikeIcon({ liked, ...props }) {
   return liked ? (
     <FontAwesomeIcon icon={solidHeart} role="button" {...props} />
   ) : (
-    <FontAwesomeIcon icon={faHeart} role="button" {...props} />
+    <FontAwesomeIcon icon={faHeart} role="button" color="white" {...props} />
   );
 }

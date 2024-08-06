@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { AddIcon, FileUploadIcon } from "..";
-import { useAxios, useData } from "../../hooks";
+import { useAxios, useData, useToastify } from "../../hooks";
 
 export default function NewTweetButton() {
+  const { setToastContent } = useToastify();
+
   const { storeData, setStoreData } = useData();
   const [show, setShow] = useState(false);
   const [imgPreview, setImagePreview] = useState(null);
+  // const [uploadTypeError, setUploadTypeError] = useState(null);
+
+  const inputRef = useRef(null);
 
   const { post } = useAxios();
 
@@ -28,6 +33,15 @@ export default function NewTweetButton() {
 
     const newTweetContent = e.target["new-tweet-content"].value;
 
+    if (!newTweetContent) {
+      setToastContent({
+        content: "Tweet can not be empty",
+        type: "warning",
+        duration: 5000,
+      });
+      return;
+    }
+
     const newTweetImg = e.target["new-tweet-img"].files;
 
     const formData = new FormData();
@@ -38,21 +52,23 @@ export default function NewTweetButton() {
       formData.append("image", newTweetImg[0]);
     }
 
-    // console.log(formData.get("newTweetImage"));
-
     try {
-      // having issue with NETWORK_ERR if modal not closed
       const response = await post("/tweet/new", formData);
+      console.log(response);
 
-      const { _id: tweet_id } = response.data?.tweet;
-
-      if (tweet_id) {
+      if (response.status === 200) {
         setImagePreview(null);
 
         setStoreData({
           ...storeData,
           tweets: [{ ...response.data.tweet }, ...storeData.tweets],
           tweet: { ...response.data.tweet },
+        });
+
+        setToastContent({
+          content: "Tweeted Successfuly",
+          type: "success",
+          duration: 2000,
         });
 
         handleClose();
@@ -62,20 +78,25 @@ export default function NewTweetButton() {
     }
   };
 
+  useEffect(() => {
+    if (show) inputRef?.current.focus();
+  }, [show]);
+
   return (
     <>
       <button
         className="bg-primary p-2 rounded-1 d-flex align-items-center border border-0 shadow-sm"
         onClick={handleShow}
       >
-        <div
+        {/* <div
           className="d-flex align-items-center justify-content-center d-sm-none d-flex text-white"
           style={{ width: "30px", height: "30px" }}
         >
           <AddIcon />
-        </div>
+        </div> */}
 
-        <p className="m-0 d-none d-sm-block text-white">Tweet</p>
+        {/* <p className="m-0 d-none d-sm-block text-white">Tweet</p> */}
+        <p className="m-0 text-white">Tweet</p>
       </button>
 
       <Modal show={show} onHide={handleClose}>
@@ -89,8 +110,12 @@ export default function NewTweetButton() {
                 as="textarea"
                 rows={3}
                 placeholder="Write your tweet"
+                ref={inputRef}
               />
             </Form.Group>
+            {/* <div className="alert alert-danger m-0 my-2 p-1 px-2" role="alert">
+              A simple danger alert—check it out!
+            </div> */}
             <Form.Group
               controlId="new-tweet-img"
               className="px-2 mb-2 d-flex align-items-center"
@@ -108,9 +133,22 @@ export default function NewTweetButton() {
                 hidden
                 onChange={(e) => {
                   if (e.currentTarget.files.length < 0) return;
+                  console.log(e.currentTarget.files[0]);
+
                   const image = e.currentTarget.files[0];
-                  const previewURL = URL.createObjectURL(image);
-                  setImagePreview(previewURL);
+                  const [fileType, imageFormat] = image.type.split("/");
+
+                  if (["jpeg", "jpg", "png", "webp"].includes(imageFormat)) {
+                    const previewURL = URL.createObjectURL(image);
+                    setImagePreview(previewURL);
+                  } else {
+                    setToastContent({
+                      content:
+                        'supported image type ("jpeg", "jpg", "png", "webp")',
+                      type: "error",
+                      duration: 5000,
+                    });
+                  }
                 }}
               />
             </Form.Group>

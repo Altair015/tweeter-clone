@@ -8,7 +8,7 @@ export function ValidateJWTMiddleware(req, res, next) {
     if (!Object.keys(req.cookies).length) {
       return res.status(401).send({
         staus: "unauthorized",
-        message: "Cookie not found",
+        message: "Cookie not found or expired",
       });
     }
 

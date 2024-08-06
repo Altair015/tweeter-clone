@@ -24,8 +24,8 @@ export default function Loader() {
       className="h-100 d-flex justify-content-center align-items-center"
     >
       <div className="d-flex flex-column align-items-center">
-        <Spinner animation="border" size="sm" />
-        <p className="fw-semibold p-1">{loading}</p>
+        <Spinner animation="border" size="sm" color="white" />
+        <p className="fw-semibold p-1 text-white">{loading}</p>
       </div>
     </div>
   );
