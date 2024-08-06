@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { AddIcon, FileUploadIcon } from "..";
+import { FileUploadIcon } from "..";
 import { useAxios, useData, useToastify } from "../../hooks";
 
 export default function NewTweetButton() {
@@ -26,10 +26,6 @@ export default function NewTweetButton() {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    console.log(
-      e.target["new-tweet-img"].files,
-      e.target["new-tweet-content"].value
-    );
 
     const newTweetContent = e.target["new-tweet-content"].value;
 
@@ -54,7 +50,6 @@ export default function NewTweetButton() {
 
     try {
       const response = await post("/tweet/new", formData);
-      console.log(response);
 
       if (response.status === 200) {
         setImagePreview(null);
@@ -133,7 +128,6 @@ export default function NewTweetButton() {
                 hidden
                 onChange={(e) => {
                   if (e.currentTarget.files.length < 0) return;
-                  console.log(e.currentTarget.files[0]);
 
                   const image = e.currentTarget.files[0];
                   const [fileType, imageFormat] = image.type.split("/");

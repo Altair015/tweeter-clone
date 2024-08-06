@@ -15,8 +15,6 @@ export default function Home() {
   const fetchAllTweets = async () => {
     const response = await get(`/tweet`);
 
-    console.log(response);
-
     if (response.status === 200) {
       setData({ user: { userId: user_id }, tweets: [...response.data] });
       setStoreData({ user: { userId: user_id }, tweets: [...response.data] });
@@ -35,15 +33,12 @@ export default function Home() {
     fetchAllTweets();
 
     return () => {
-      console.log("HOME UNMOUNTED");
       setData(null);
       setStoreData(null);
     };
   }, []);
 
   useEffect(() => {
-    console.log("should only if the store is updated");
-
     storeData?.tweet &&
       setData({ ...data, tweets: [storeData.tweet, ...data.tweets] });
 

@@ -27,8 +27,6 @@ export default function UserProfile() {
   const { user_id: loggedUser } = useAuth().auth;
   const { setToastContent } = useToastify();
 
-  console.log(storeData);
-
   // States
   const [data, setData] = useState(null);
   const [showModal, setShowModal] = useState({
@@ -193,7 +191,6 @@ export default function UserProfile() {
 
   async function fetchProileData() {
     const response = await get(`/user/${user_id}`);
-    console.log(response.data);
 
     if (response.status === 200) {
       setData({

@@ -1,11 +1,7 @@
-import fs from "node:fs";
-import Tweet from "../models/tweetModel.js";
-import User from "../models/userModel.js";
-import { filterTweets } from "../services/userServices.js";
 import mongoose from "mongoose";
+import Tweet from "../models/tweetModel.js";
 
 export const createTweet = async (req, res) => {
-  console.log("createNewTweet", req.body, req.file);
   try {
     const { newTweetContent: content } = req.body;
     const { userId } = req.cookies.auth;
@@ -47,8 +43,6 @@ export const getAllTweets = async (req, res) => {
       .populate({ path: "retweeted_by", select: "username fullname" })
       .sort({ createdAt: -1 })
       .exec();
-
-    console.log(tweets);
 
     res.status(200).json(tweets);
   } catch (error) {
@@ -255,8 +249,6 @@ export const retweet = async (req, res) => {
 
 export const deleteTweet = async (req, res) => {
   const { tweet_id } = req.params;
-  // const { userId } = req.cookies.auth;
-  console.log(tweet_id);
   try {
     const resultant = await Tweet.aggregate([
       // 1. target the tweet

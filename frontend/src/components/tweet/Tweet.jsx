@@ -156,8 +156,6 @@ export default function Tweet({
   const handleRetweet = async (e) => {
     e.stopPropagation();
 
-    console.log("retweet", retweets, userId, checkIfInclued(retweets, userId));
-
     // this checks if the user has retweeted before,
     // if true, not to allow the user to retweet again
     if (checkIfInclued(retweets, userId)) {
@@ -165,7 +163,6 @@ export default function Tweet({
     }
 
     const response = await post(`/tweet/${tweetId}/retweet`);
-    console.log(response);
 
     if (checkIfInclued(response.data.tweet.retweeted_by, userId)) {
       const tweets = data.tweets.map((tweet) => {
@@ -238,7 +235,7 @@ export default function Tweet({
         } d-flex flex-column border-2 border-bottom position-relative`}
         role={!disableOnTweetClick ? "button" : ""}
         onClick={() => {
-          console.log(tweetId);
+          s;
           if (!disableOnTweetClick) navigate(`/tweet/${tweetId}`);
         }}
       >

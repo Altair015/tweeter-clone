@@ -5,7 +5,6 @@ export const getImageByName = async (req, res) => {
   try {
     const { image_name } = req.params;
     const [name, ext] = image_name.split(".");
-    console.log(image_name);
 
     // getting the file from pulic folder and serving to frontend
     const data = readFileSync(`./public/uploads/${image_name}`);

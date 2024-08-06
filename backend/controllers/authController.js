@@ -47,7 +47,6 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
   try {
     const { username, password } = req.body;
-    console.log(username, password);
 
     const dbResponse = await User.findOne({ username });
 
@@ -76,7 +75,6 @@ export async function signIn(req, res) {
 
     // converting document to plain javascript object
     const plainObject = dbResponse.toObject();
-    console.log(dbResponse, plainObject);
 
     // removing password before sending as response
     // delete plainObject.password;

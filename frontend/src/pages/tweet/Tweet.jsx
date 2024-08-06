@@ -20,7 +20,7 @@ export default function TweetPage() {
 
   const fetchTweetData = async () => {
     const response = await get(`/tweet/${tweet_id}`);
-    console.log(response);
+
     if (response.status === 200) {
       setData({
         user: { userId: user_id },
@@ -36,15 +36,9 @@ export default function TweetPage() {
   useEffect(() => {
     fetchTweetData();
     return () => {
-      console.log("tweetPage unmounted");
       setData(null);
     };
   }, [tweet_id]);
-
-  // useEffect(() => {
-  //   console.log("yaahooo", data);
-  //   setData({ ...data, tweets: data?.tweets });
-  // }, [data?.tweets]);
 
   return (
     <Container className="h-100">

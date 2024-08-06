@@ -15,7 +15,6 @@ export function ValidateJWTMiddleware(req, res, next) {
     const { token, userId } = req.cookies.auth;
 
     if (!token) {
-      console.log("Error Validating JWT");
       return res.status(401).send({
         staus: "unauthorized",
         message: "No 'token' found in the request",
@@ -25,7 +24,6 @@ export function ValidateJWTMiddleware(req, res, next) {
     const decodedUserId = jsonwebtoken.verify(token, JWT_SECRET);
 
     if (userId != decodedUserId.userId) {
-      console.log(userId, decodedUserId.userId, "Error Validating JWT");
       res.status(401).json({
         staus: "unauthorized",
         message: "Token is invalid or expired",
@@ -40,6 +38,5 @@ export function ValidateJWTMiddleware(req, res, next) {
     });
   }
 
-  console.log("Validation was successful");
   next();
 }

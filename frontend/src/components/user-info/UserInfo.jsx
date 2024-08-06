@@ -14,7 +14,6 @@ export default function UserInfo(props) {
 
   const fetchUserDetails = async () => {
     const response = await get(`/user/${user_id}`);
-    console.log(response);
 
     if (response.status === 200) {
       setStoreData({
@@ -25,10 +24,6 @@ export default function UserInfo(props) {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(storeData?.user);
-  }, [storeData?.user]);
 
   useEffect(() => {
     fetchUserDetails();

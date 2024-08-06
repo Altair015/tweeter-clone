@@ -5,9 +5,13 @@ Created the directories backend and frontend.
 Added the proxy for the backend in vite-config.js file in the client directory.
 
 Backend:
+Created .env
+    PORT = 8000
+    JWT_SECRET =
+    MONGO_CONNECTION_URI =
 Created the package.json file using npm init cmd.
 Created db.js to do the mongoDB setup and using in the entry ponint of the backend server.js
-Created routes and added V_1 as sub directory so that routes versioning can be done, as part of good coding practices.
+Created routes and added v_1 as sub directory so that routes versioning can be done, as part of good coding practices.
 Created express routing in the routes dir with respective routing required as part of the project.
 Created the directories models, controllers, routes, middlewares, public, uploads, services, db and utils. 
 Installed the libraries: mongoose, nodemon, morgan, multer, nodemon bcrypt, dotenv, express, jsonwebtoken, cookie-parser and mongoose.
