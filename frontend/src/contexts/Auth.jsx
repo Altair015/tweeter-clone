@@ -6,6 +6,7 @@ const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(
     JSON.parse(localStorage.getItem("auth")) || {}
   );
+
   const initialState = { auth, setAuth };
 
   useEffect(() => {

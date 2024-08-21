@@ -1,5 +1,4 @@
-import { createContext, useEffect, useState } from "react";
-import { useAuth, useAxios } from "../hooks";
+import { createContext, useState } from "react";
 
 export const DataContext = createContext();
 

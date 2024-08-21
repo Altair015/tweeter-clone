@@ -72,7 +72,11 @@ export default function UserProfile() {
     setShowModal({ status: true, target: "user_details" });
   };
 
+  console.log(data)
+
   const handleUserFollow = async () => {
+    console.log(data.user.followers)
+
     // if following the user, remove the id (UNFOLLOW)
     if (data.user.followers.includes(`${loggedUser}`)) {
       // removing the id in followers
@@ -83,7 +87,7 @@ export default function UserProfile() {
       // taking the logged in user id from cookie
       const response = await put(pathname, { type: "unfollow" });
 
-      setData({ ...data, followers: updatedFollowers });
+      setData({ ...data, user: { ...data.user, followers: updatedFollowers } });
       setFollowersCount((pre) => pre - 1);
     }
 
@@ -95,7 +99,7 @@ export default function UserProfile() {
       // taking the logged in user id from cookie
       const response = await put(pathname, { type: "follow" });
 
-      setData({ ...data, followers: updatedFollowers });
+      setData({ ...data, user: { ...data.user, followers: updatedFollowers } });
       setFollowersCount((pre) => pre + 1);
     }
   };
@@ -160,9 +164,8 @@ export default function UserProfile() {
             user: {
               ...storeData.user,
               ...response.data,
-              profile_pic: `${
-                response.data.profile_pic
-              }/?image-version=${new Date().getTime()}`,
+              profile_pic: `${response.data.profile_pic
+                }/?image-version=${new Date().getTime()}`,
             },
           });
         }
@@ -225,7 +228,7 @@ export default function UserProfile() {
             src={
               data.user.profile_cover
                 ? `${VITE_BACKEND_IMAGE_URI}/${data.user.profile_cover}`
-                : "./images/profile-cover-placeholder.jpeg"
+                : "/images/profile-cover-placeholder.jpeg"
             }
           />
 
@@ -263,7 +266,7 @@ export default function UserProfile() {
               src={
                 data.user.profile_pic
                   ? `${VITE_BACKEND_IMAGE_URI}/${data.user.profile_pic}`
-                  : "./images/profile-placeholder.webp"
+                  : "/images/profile-placeholder.webp"
               }
               onMouseEnter={() => {
                 if (user_id === loggedUser) setOnProfilePic(true);
@@ -317,16 +320,15 @@ export default function UserProfile() {
                     <EditPenIcon className="text-white" />
                   )}
                   <p
-                    className={`m-0 ${
-                      user_id === loggedUser ? "ms-2" : ""
-                    } fs-7 text-white`}
+                    className={`m-0 ${user_id === loggedUser ? "ms-2" : ""
+                      } fs-7 text-white`}
                     style={{ transform: "translateY(1px)" }}
                   >
                     {user_id === loggedUser
                       ? "Edit Profile"
                       : data.user.followers.includes(`${loggedUser}`)
-                      ? "Unfollow"
-                      : "Follow"}
+                        ? "Unfollow"
+                        : "Follow"}
                   </p>
                 </div>
               </Button>
@@ -355,9 +357,8 @@ export default function UserProfile() {
               )}
               {data.user.location && (
                 <div
-                  className={`d-flex align-items-center ${
-                    !!data.user.dob && "ms-4"
-                  } text-white`}
+                  className={`d-flex align-items-center ${!!data.user.dob && "ms-4"
+                    } text-white`}
                 >
                   <LocationIcon className="text-white" />
                   <p
@@ -393,9 +394,8 @@ export default function UserProfile() {
             {data?.tweets.length ? (
               data.tweets.map((tweet) => (
                 <Tweet
-                  key={`user-profile-tweet-${
-                    tweet._id
-                  }-${new Date().getTime()}`}
+                  key={`user-profile-tweet-${tweet._id
+                    }-${new Date().getTime()}`}
                   tweet={tweet}
                   data={data}
                   handleData={handleData}
@@ -448,66 +448,65 @@ export default function UserProfile() {
           )}
           {(showModal.target === "profile_pic" ||
             showModal.target === "profile_cover") && (
-            <>
-              <Modal.Header closeButton>
-                <Modal.Title className="h5">
-                  Edit Profile
-                  {showModal.target === "profile_pic" ? "Picture" : "Cover"}
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form.Group
-                  controlId={`user-profile-${
-                    showModal.target === "profile_pic" ? "pic" : "cover"
-                  }`}
-                  className="px-2 mb-2 d-flex align-items-center"
-                >
-                  <Form.Label
-                    className="bg-primary d-flex justify-content-center align-items-center rounded rounded-2 text-white m-0"
-                    style={{ width: "30px", height: "30px" }}
-                    role="button"
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title className="h5">
+                    Edit Profile
+                    {showModal.target === "profile_pic" ? "Picture" : "Cover"}
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group
+                    controlId={`user-profile-${showModal.target === "profile_pic" ? "pic" : "cover"
+                      }`}
+                    className="px-2 mb-2 d-flex align-items-center"
                   >
-                    <FileUploadIcon />
-                  </Form.Label>
-                  <span className="ms-2 text-secondary">Upload Image</span>
-                  <Form.Control
-                    type="file"
-                    hidden
-                    onChange={(e) => {
-                      if (e.currentTarget.files.length < 0) return;
-                      const image = e.currentTarget.files[0];
+                    <Form.Label
+                      className="bg-primary d-flex justify-content-center align-items-center rounded rounded-2 text-white m-0"
+                      style={{ width: "30px", height: "30px" }}
+                      role="button"
+                    >
+                      <FileUploadIcon />
+                    </Form.Label>
+                    <span className="ms-2 text-secondary">Upload Image</span>
+                    <Form.Control
+                      type="file"
+                      hidden
+                      onChange={(e) => {
+                        if (e.currentTarget.files.length < 0) return;
+                        const image = e.currentTarget.files[0];
 
-                      const [fileType, imageFormat] = image.type.split("/");
+                        const [fileType, imageFormat] = image.type.split("/");
 
-                      if (
-                        ["jpeg", "jpg", "png", "webp"].includes(imageFormat)
-                      ) {
-                        const previewURL = URL.createObjectURL(image);
-                        setImagePreview(previewURL);
-                      } else {
-                        setToastContent({
-                          content:
-                            'supported image type ("jpeg", "jpg", "png", "webp")',
-                          type: "error",
-                          duration: 5000,
-                        });
-                      }
-                    }}
-                  />
-                </Form.Group>
-
-                {imgPreview && (
-                  <div className="w-100 d-flex justify-content-center">
-                    <img
-                      src={imgPreview || "/images/posts-images/1.jpg"}
-                      className="w-75 rounded rounded-2 h-100 object-fit-contain"
-                      style={{ maxHeight: "50vh" }}
+                        if (
+                          ["jpeg", "jpg", "png", "webp"].includes(imageFormat)
+                        ) {
+                          const previewURL = URL.createObjectURL(image);
+                          setImagePreview(previewURL);
+                        } else {
+                          setToastContent({
+                            content:
+                              'supported image type ("jpeg", "jpg", "png", "webp")',
+                            type: "error",
+                            duration: 5000,
+                          });
+                        }
+                      }}
                     />
-                  </div>
-                )}
-              </Modal.Body>
-            </>
-          )}
+                  </Form.Group>
+
+                  {imgPreview && (
+                    <div className="w-100 d-flex justify-content-center">
+                      <img
+                        src={imgPreview || "/images/posts-images/1.jpg"}
+                        className="w-75 rounded rounded-2 h-100 object-fit-contain"
+                        style={{ maxHeight: "50vh" }}
+                      />
+                    </div>
+                  )}
+                </Modal.Body>
+              </>
+            )}
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close

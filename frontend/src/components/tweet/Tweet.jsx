@@ -235,7 +235,6 @@ export default function Tweet({
         } d-flex flex-column border-2 border-bottom position-relative`}
         role={!disableOnTweetClick ? "button" : ""}
         onClick={() => {
-          s;
           if (!disableOnTweetClick) navigate(`/tweet/${tweetId}`);
         }}
       >

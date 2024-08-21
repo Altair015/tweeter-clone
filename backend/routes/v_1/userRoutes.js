@@ -10,14 +10,7 @@ import { ValidateJWTMiddleware } from "../../middlewares/protected.js";
 const router = Router();
 
 router.get("/user/:user_id", ValidateJWTMiddleware, getUserData);
-
-router.post(
-  "/user/:user_id",
-  ValidateJWTMiddleware,
-  multerMiddleWare,
-  editUserProfile
-);
-
+router.post("/user/:user_id", ValidateJWTMiddleware, multerMiddleWare, editUserProfile);
 router.put("/user/:user_id", ValidateJWTMiddleware, updateUserFollowing);
 
 export default router;
