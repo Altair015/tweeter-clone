@@ -209,6 +209,10 @@ export default function UserProfile() {
 
   useEffect(() => {
     fetchProileData();
+
+    return ()=>{
+      // reset the userInfo
+    }
   }, [pathname]);
 
   // to manage focus on edit
