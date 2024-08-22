@@ -17,7 +17,6 @@ export default function Home() {
 
     if (response.status === 200) {
       setData({ user: { userId: user_id }, tweets: [...response.data] });
-      console.log(storeData)
       setStoreData({ user: { ...storeData?.user, userId: user_id }, tweets: [...response.data] });
     }
   };
@@ -34,8 +33,6 @@ export default function Home() {
     fetchAllTweets();
 
     return () => {
-      console.log(data)
-      // setStoreData({ ...data });
       setData(null);
       // setStoreData(null);
     };

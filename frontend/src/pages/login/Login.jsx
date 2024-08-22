@@ -106,12 +106,20 @@ const Login = () => {
                   className="mb-3"
                   type="text"
                   placeholder="Username"
+                  title="username must not be empty"
+                  required
+                  onInvalid={(e) => e.target.setCustomValidity('Username must not be empty')}
+                  onInput={(e) => e.target.setCustomValidity('')}
                 />
                 <Form.Control
                   id="password"
                   className="mb-3"
                   type="password"
                   placeholder="Password"
+                  title="username must not be empty"
+                  required
+                  onInvalid={(e) => e.target.setCustomValidity('Password must not be empty')}
+                  onInput={(e) => e.target.setCustomValidity('')}
                 />
                 <Button
                   variant="primary"

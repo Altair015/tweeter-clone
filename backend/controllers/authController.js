@@ -53,7 +53,7 @@ export async function signIn(req, res) {
     if (!dbResponse) {
       res.status(401).send({
         status: "unauthorized",
-        message: "Wrong UserName or Password",
+        message: "User does not exist.",
       });
       return;
     }

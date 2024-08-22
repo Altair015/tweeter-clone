@@ -207,7 +207,9 @@ export default function Tweet({
         type: "success",
         duration: 2000,
       });
-    } else console.log(response.status);
+    } else {
+      console.log(response.status)
+    };
   };
 
   const onUserNameClick = (e) => {
@@ -230,9 +232,8 @@ export default function Tweet({
   return (
     <>
       <Container
-        className={`${
-          !disableOnTweetClick ? "tweet" : ""
-        } d-flex flex-column border-2 border-bottom position-relative`}
+        className={`${!disableOnTweetClick ? "tweet" : ""
+          } d-flex flex-column border-2 border-bottom position-relative`}
         role={!disableOnTweetClick ? "button" : ""}
         onClick={() => {
           if (!disableOnTweetClick) navigate(`/tweet/${tweetId}`);

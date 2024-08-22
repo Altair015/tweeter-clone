@@ -72,10 +72,8 @@ export default function UserProfile() {
     setShowModal({ status: true, target: "user_details" });
   };
 
-  console.log(data)
 
   const handleUserFollow = async () => {
-    console.log(data.user.followers)
 
     // if following the user, remove the id (UNFOLLOW)
     if (data.user.followers.includes(`${loggedUser}`)) {
@@ -139,6 +137,7 @@ export default function UserProfile() {
         const { fullname, location, dob, profile_pic, profile_cover } =
           response.data;
 
+
         setData({
           ...data,
           user: {
@@ -157,6 +156,7 @@ export default function UserProfile() {
               : profile_cover,
           },
         });
+
 
         if (user_id === loggedUser) {
           setStoreData({
@@ -210,8 +210,9 @@ export default function UserProfile() {
   useEffect(() => {
     fetchProileData();
 
-    return ()=>{
+    return () => {
       // reset the userInfo
+      // setData(null)
     }
   }, [pathname]);
 

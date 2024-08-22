@@ -10,6 +10,12 @@ export const getImageByName = async (req, res) => {
     const data = readFileSync(`./public/uploads/${image_name}`);
     // Adjust the MIME type based on the image type
     res.setHeader("Content-Type", `image/${ext}`);
+    // Could use cache busting but this is much more centeralized.
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    // for HTTP 1.0 compatibility, modern browser uses HTTP 1.1
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    res.set('Surrogate-Control', 'no-store');
     res.status(200).send(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
