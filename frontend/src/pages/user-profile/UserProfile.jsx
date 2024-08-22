@@ -148,24 +148,22 @@ export default function UserProfile() {
             // cache busting or cache invalidation.
             // As name of the file remain same react will be never know
             // OR "Cache-Control: no-cache" as header
-            profile_pic: profile_pic
-              ? `${profile_pic}/?image-version=${new Date().getTime()}`
-              : profile_pic,
+            profile_pic: profile_pic,
             profile_cover: profile_cover
               ? `${profile_cover}/?image-version=${new Date().getTime()}`
               : profile_cover,
           },
         });
 
-
+        console.log(response.data)
         if (user_id === loggedUser) {
           setStoreData({
             ...storeData,
             user: {
               ...storeData.user,
               ...response.data,
-              profile_pic: `${response.data.profile_pic
-                }/?image-version=${new Date().getTime()}`,
+              profile_pic: response.data.profile_pic
+              ,
             },
           });
         }
@@ -267,6 +265,7 @@ export default function UserProfile() {
               style={{
                 maxWidth: "150px",
                 minWidth: "50px",
+                maxHeight: "150px",
               }}
               src={
                 data.user.profile_pic

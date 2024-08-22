@@ -7,7 +7,9 @@ import multer from "multer";
 // git, this issue is still open do not waste time looking for issue at axios level.
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/uploads/"); // Destination folder for uploaded files
+    const imageUploadPath = "./public/uploads/"
+
+    cb(null, imageUploadPath); // Destination folder for uploaded files
   },
   filename: function (req, file, cb) {
     const { user_id } = req.params;

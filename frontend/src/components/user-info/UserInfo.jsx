@@ -30,6 +30,10 @@ export default function UserInfo(props) {
     fetchUserDetails();
   }, []);
 
+  useEffect(() => {
+    console.log(storeData?.user?.profile_pic)
+  }, [storeData?.user?.profile_pic])
+
   return (
     <>
       {storeData?.user && (
@@ -37,7 +41,7 @@ export default function UserInfo(props) {
           <Row className="user-info d-flex align-items-center m-0 rounded p-2 mb-2">
             <img
               src={
-                storeData.user?.profile_pic
+                storeData?.user?.profile_pic
                   ? `${VITE_BACKEND_IMAGE_URI}/${storeData.user?.profile_pic}`
                   : "/images/profile-placeholder.svg"
               }

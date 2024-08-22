@@ -5,6 +5,7 @@ import morgan from "morgan";
 import connectDB from "./db/connection.js";
 import routers from "./routes/routers.js";
 // import cors from "cors";
+import { existsSync, mkdirSync } from "node:fs";
 
 const server = express();
 
@@ -24,6 +25,11 @@ server.use("/api", routers);
 
 server.listen(PORT, () => {
   console.log(`express running on ${PORT} `);
+  const imageUploadPath = "./public/uploads/";
+
+  if (!existsSync(imageUploadPath)) {
+    mkdirSync(imageUploadPath, { recursive: true });
+  }
   // connecting with mongoDB
   connectDB();
 });
