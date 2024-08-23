@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <>
       {data ? (
-        data?.tweets?.map((tweet, index) => {
+        data?.tweets.length ? data?.tweets?.map((tweet, index) => {
           return (
             <Tweet
               key={`tweet-${index}-${tweet._id}`}
@@ -57,7 +57,12 @@ export default function Home() {
               handleData={handleData}
             />
           );
-        })
+        }) : <div className="h-100 w-100 m-0 d-flex align-items-center justify-content-center" style={{ maxHeight: "100%" }}>
+          <div>
+            <h1 className="d-flex align-items-center justify-content-center text-white">Welcome to Chitter</h1>
+            <h5 className="text-white">"Think Big. Connect Deeper. Create More."</h5>
+          </div>
+        </div>
       ) : (
         <Loader />
       )}

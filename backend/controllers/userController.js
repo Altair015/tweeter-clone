@@ -48,7 +48,6 @@ export const editUserProfile = async (req, res) => {
 };
 
 export const updateUserFollowing = async (req, res) => {
-  console.log(req.body)
   try {
     // logged in user
     const { userId } = req.cookies.auth;

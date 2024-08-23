@@ -15,7 +15,16 @@ export default function TweetPage() {
   const [data, setData] = useState(null);
 
   const handleData = (newData) => {
-    setData({ ...newData });
+    const { tweets, user, action } = newData
+
+    if (action === "commented") {
+      const { reply } = newData
+      tweets.splice(1, 0, reply)
+      // logic to add the reply in the replies section
+      setData({ tweets, user })
+      return
+    }
+    setData({ tweets, user });
   };
 
   const fetchTweetData = async () => {
@@ -43,7 +52,7 @@ export default function TweetPage() {
   return (
     <Container className="h-100">
       <Row className="h-100">
-        <Col className="p-0 h-100">
+        <Col className="p-0 d-flex flex-column">
           {data?.tweets ? (
             <>
               <Tweet
@@ -54,16 +63,15 @@ export default function TweetPage() {
                 disableOnTweetClick={data.tweets[0]._id === tweet_id}
                 disableDelete={data.tweets[0]._id === tweet_id}
               />
-              <div className="tweet-replies d-flex flex-column m-2">
+              <div className={`tweet-replies d-flex flex-column m-2 ${data.tweets.length === 1 ? "flex-fill" : ""}`}>
                 <h6 className="text-white">Replies</h6>
-                {data.tweets.map((tweet, index) => {
+                {data.tweets.length > 1 ? data.tweets.map((tweet, index) => {
                   if (index)
                     return (
                       <div
                         className="border border-2 border-bottom-0 mb-2 rounded rounded-2"
-                        key={`tweet-wrapper-${
-                          tweet._id
-                        }-${new Date().getTime()}`}
+                        key={`tweet-wrapper-${tweet._id
+                          }-${new Date().getTime()}`}
                       >
                         <Tweet
                           key={`tweet-${tweet._id}-${new Date().getTime()}`}
@@ -75,7 +83,11 @@ export default function TweetPage() {
                         />
                       </div>
                     );
-                })}
+                }) : <div
+                  className="border border-2 mb-2 rounded rounded-2 h-100 d-flex justify-content-center align-items-center"
+                >
+                  <h2 className="text-white">No replies !!!</h2>
+                </div>}
               </div>
             </>
           ) : (

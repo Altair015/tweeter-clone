@@ -87,7 +87,7 @@ export default function Tweet({
           return tweet;
         });
 
-        handleData({ ...data, tweets });
+        handleData({ ...data, tweets, action: "commented", reply: response.data.replyTweet });
         setCommentsCounter((pre) => pre + 1);
         setToastContent({
           content: "Replied successfully",
@@ -118,7 +118,7 @@ export default function Tweet({
           return tweet;
         });
 
-        handleData({ ...data, tweets });
+        handleData({ ...data, tweets, action: "liked" });
         setLikesCounter((pre) => pre + 1);
         setLiked(true);
         setToastContent({
@@ -141,7 +141,7 @@ export default function Tweet({
           return tweet;
         });
 
-        handleData({ ...data, tweets });
+        handleData({ ...data, tweets, action: "unliked" });
         setLikesCounter((pre) => pre - 1);
         setLiked(false);
         setToastContent({
@@ -173,7 +173,7 @@ export default function Tweet({
       });
 
       setRetweeted(true);
-      handleData({ ...data, tweets });
+      handleData({ ...data, tweets, action: "retweeted" });
       setRetweetsCounter((pre) => pre + 1);
       setToastContent({
         content: "Retweeted successfully",
@@ -201,7 +201,7 @@ export default function Tweet({
     }
 
     if (response.status === 204) {
-      handleData({ ...data, tweets });
+      handleData({ ...data, tweets, action: "delete" });
       setToastContent({
         content: "Tweet deleted successfully",
         type: "success",

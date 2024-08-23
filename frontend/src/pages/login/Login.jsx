@@ -99,7 +99,7 @@ const Login = () => {
               md={8}
               className="login-form-section bg-light p-4 rounded-end-2 rounded-md-end-0 rounded-md-bottom-2"
             >
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} autoComplete="off">
                 <h2 className="mb-4">Login</h2>
                 <Form.Control
                   id="username"
@@ -110,6 +110,7 @@ const Login = () => {
                   required
                   onInvalid={(e) => e.target.setCustomValidity('Username must not be empty')}
                   onInput={(e) => e.target.setCustomValidity('')}
+                  autoComplete="off"
                 />
                 <Form.Control
                   id="password"
@@ -120,6 +121,7 @@ const Login = () => {
                   required
                   onInvalid={(e) => e.target.setCustomValidity('Password must not be empty')}
                   onInput={(e) => e.target.setCustomValidity('')}
+                  autoComplete="off"
                 />
                 <Button
                   variant="primary"

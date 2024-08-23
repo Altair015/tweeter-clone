@@ -27,6 +27,7 @@ server.listen(PORT, () => {
   console.log(`express running on ${PORT} `);
   const imageUploadPath = "./public/uploads/";
 
+  // creating upload dir for images
   if (!existsSync(imageUploadPath)) {
     mkdirSync(imageUploadPath, { recursive: true });
   }

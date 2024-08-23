@@ -3,20 +3,19 @@ import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { useLocation } from "react-router-dom";
 import {
   CakeIcon,
   CalenderIcon,
-  EditBrushIcon,
   EditPenIcon,
   FileUploadIcon,
   Loader,
   PaintBrushIcon,
-  Tweet,
+  Tweet
 } from "../../components";
 import LocationIcon from "../../components/icons/LocationIcon";
 import { useAuth, useAxios, useData, useToastify } from "../../hooks";
 import "./style.css";
-import { useLocation } from "react-router-dom";
 
 export default function UserProfile() {
   // Hooks
@@ -148,21 +147,20 @@ export default function UserProfile() {
             // cache busting or cache invalidation.
             // As name of the file remain same react will be never know
             // OR "Cache-Control: no-cache" as header
-            profile_pic: profile_pic,
+            profile_pic: profile_pic ? `${profile_pic}/?image-version=${new Date().getTime()}` : profile_pic,
             profile_cover: profile_cover
               ? `${profile_cover}/?image-version=${new Date().getTime()}`
               : profile_cover,
           },
         });
 
-        console.log(response.data)
         if (user_id === loggedUser) {
           setStoreData({
             ...storeData,
             user: {
               ...storeData.user,
               ...response.data,
-              profile_pic: response.data.profile_pic
+              profile_pic: `${profile_pic}/?image-version=${new Date().getTime()}`
               ,
             },
           });
@@ -242,7 +240,7 @@ export default function UserProfile() {
             >
               <PaintBrushIcon
                 id="user-banner-edit-icon"
-                className="p-2 position-absolute end-0 rounded rounded-2 m-1"
+                className="p-2 position-absolute end-0 rounded rounded-2 m-1 bg-primary text-white"
                 size="xs"
               />
             </div>
@@ -253,7 +251,7 @@ export default function UserProfile() {
         <div className="border-2 border-bottom border-top-0 border-right-0 border-left-0">
           {/* Profile Pic*/}
           <div
-            className="profile-image position-relative"
+            className="profile-pic-wrapper position-relative"
             style={{
               width: "25%",
             }}
@@ -261,7 +259,8 @@ export default function UserProfile() {
             onClick={handleEditProfilePic}
           >
             <img
-              className="z-1 object-fit-cover ratio ratio-1x1 rounded-circle border border-2 start-0 position-absolute translate-middle-y ms-4 w-100 "
+              id="profile-pic"
+              className=" z-1 object-fit-cover ratio ratio-1x1 rounded-circle border border-2 start-0 position-absolute translate-middle-y ms-4 w-100 "
               style={{
                 maxWidth: "150px",
                 minWidth: "50px",
@@ -273,10 +272,10 @@ export default function UserProfile() {
                   : "/images/profile-placeholder.webp"
               }
               onMouseEnter={() => {
-                if (user_id === loggedUser) setOnProfilePic(true);
+                // if (user_id === loggedUser) setOnProfilePic(true);
               }}
             />
-            {onProfilePic && (
+            {(
               <div
                 className="user-profile-icon-placeholder z-2 position-absolute translate-middle-y ms-4 ratio ratio-1x1 rounded-circle w-100"
                 style={{
@@ -284,11 +283,16 @@ export default function UserProfile() {
                   minWidth: "50px",
                 }}
                 onMouseLeave={() => {
-                  setOnProfilePic(false);
+                  // setOnProfilePic(false);
                 }}
               >
                 <div className="w-100 d-flex justify-content-center align-items-center">
-                  <EditBrushIcon id="user-profile-edit-icon" className="z-5" />
+                  {/* <EditBrushIcon id="user-profile-edit-icon" className="z-5" /> */}
+                  <PaintBrushIcon
+                    id="user-banner-edit-icon"
+                    className="z-5 text-white p-1 bg-primary position-absolute end-0 rounded rounded-2 bottom-0"
+                    size="2xs"
+                  />
                 </div>
               </div>
             )}
@@ -391,8 +395,8 @@ export default function UserProfile() {
         </div>
 
         {/* Tweets Section*/}
-        <div className="user-profile-tweets-section px-2 pb-2 d-flex flex-column align-items-center  w-100 flex-fill">
-          <h5 className="my-2 text-white">Tweets</h5>
+        <div className="user-profile-tweets-section px-2 pb-2 d-flex flex-column w-100 flex-fill">
+          <h6 className="text-white">Tweets & Replies</h6>
 
           <div className="d-flex flex-column align-items-center border-2 border rounded rounded-2 w-100 justify-content-center flex-fill">
             {data?.tweets.length ? (

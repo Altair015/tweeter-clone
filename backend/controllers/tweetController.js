@@ -132,6 +132,11 @@ export const replyTweet = async (req, res) => {
 
     const response = await newTweet.save();
 
+    const replyTweet = await Tweet.findById(response._id).populate({
+      path: "tweeted_by",
+      select: "username profile_pic",
+    });
+
     const { _id: comment_tweet_id } = response;
 
     // use the _id to push to parentTweet replies
@@ -160,6 +165,7 @@ export const replyTweet = async (req, res) => {
     res.status(200).json({
       message: "tweet successfully registered.",
       tweet: painObject,
+      replyTweet: replyTweet,
     });
   } catch (error) {
     console.log(error);

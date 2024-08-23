@@ -48,13 +48,30 @@ const SignUp = () => {
       return;
     }
 
-    const response = await axios.post(
-      `${VITE_BACKEND_IDENTIFIER}/auth/signup`,
-      { fullname, email, username, password }
-    );
-    if (response) {
-      navigate("/login");
+    try {
+      const response = await axios.post(
+        `${VITE_BACKEND_IDENTIFIER}/auth/signup`,
+        { fullname, email, username, password }
+      );
+      if (response.status === 200) {
+        setToastContent({
+          content: `User created successfully`,
+          type: "success",
+          duration: 5000,
+        });
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error)
+      if (error.response.status === 409) {
+        setToastContent({
+          content: error.response.data.error,
+          type: "error",
+          duration: 5000,
+        });
+      }
     }
+
   };
 
   return (
@@ -77,10 +94,10 @@ const SignUp = () => {
               md={8}
               className="signup-form-section bg-light p-4 rounded-end-2"
             >
-              <Form onSubmit={handleOnSubmit}>
+              <Form onSubmit={handleOnSubmit} autoComplete="new-password">
                 <h2 className="mb-4">SignUp</h2>
 
-                {/* <Form.Group
+                <Form.Group
                   as={Col}
                   className="mb-3"
                   controlId="validationCustom01"
@@ -89,19 +106,18 @@ const SignUp = () => {
                   <Form.Control
                     required
                     type="text"
-                    placeholder="First name"
-                    defaultValue="Mark"
+                    placeholder="Test"
                     autoComplete="new-password"
                   />
                   <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                </Form.Group> */}
+                </Form.Group>
 
                 <Form.Control
                   id="fullname"
                   className="mb-3"
                   type="text"
                   placeholder="Full Name"
-                  autoComplete="new-password"
+                  autoComplete="off"
                   pattern="^[a-zA-Z]+(\s[a-zA-Z]+)?$"
                   required
                   // onInvalid={(e) => e.target.setCustomValidity('Fullname must not be empty and should only contain letters')}
@@ -121,7 +137,7 @@ const SignUp = () => {
                   pattern="[a-z]+[0-9]*@[a-z]+\.[a-z]{2,}"
                   required
                   onInvalid={(e) => {
-                    console.log(e.target.value)
+
                     let input = e.target.value
                     let pattern = /^[a-z]+[0-9]*@[a-z]+\.[a-z]{2,}$/
                     if (!pattern.test(input)) {
@@ -141,7 +157,7 @@ const SignUp = () => {
                   type="text"
                   placeholder="Username"
                   autoComplete="new-password"
-                  pattern="[a-z]+[@]{1}[a-z1-0]{1,6}"
+                  pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*@)[a-zA-Z\d@]{6}$"
                   title="Username must not be empty"
                   required
                   onInvalid={(e) => e.target.setCustomValidity('Username must not be empty')}
@@ -156,6 +172,7 @@ const SignUp = () => {
                   required
                   onInvalid={(e) => e.target.setCustomValidity('Password must not be empty')}
                   onInput={(e) => e.target.setCustomValidity('')}
+                  autoComplete="new-password"
                 />
                 <Form.Control
                   id="confirmPassword"
@@ -166,6 +183,7 @@ const SignUp = () => {
                   required
                   onInvalid={(e) => e.target.setCustomValidity('Confirm password must not be empty')}
                   onInput={(e) => e.target.setCustomValidity('')}
+                  autoComplete="new-password"
                 />
                 <Button variant="primary" type="submit">
                   Register
