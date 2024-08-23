@@ -8,7 +8,8 @@ Backend:
 Created .env
     PORT = 8000
     JWT_SECRET =
-    MONGO_CONNECTION_URI =
+    MONGO_CONNECTION_URI ="mongodb+srv://mand23sngh:hZM7WSV6WaxTbDJh@cluster0.alxnjfv.mongodb.net/tweeter_clone?retryWrites=true&w=majority&appName=Cluster0"
+    
 Created the package.json file using npm init cmd.
 Created db.js to do the mongoDB setup and using in the entry ponint of the backend server.js
 Created routes and added v_1 as sub directory so that routes versioning can be done, as part of good coding practices.
