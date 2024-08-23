@@ -97,21 +97,6 @@ const SignUp = () => {
               <Form onSubmit={handleOnSubmit} autoComplete="new-password">
                 <h2 className="mb-4">SignUp</h2>
 
-                <Form.Group
-                  as={Col}
-                  className="mb-3"
-                  controlId="validationCustom01"
-                >
-                  <Form.Label>First name</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    placeholder="Test"
-                    autoComplete="new-password"
-                  />
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                </Form.Group>
-
                 <Form.Control
                   id="fullname"
                   className="mb-3"
@@ -137,7 +122,6 @@ const SignUp = () => {
                   pattern="[a-z]+[0-9]*@[a-z]+\.[a-z]{2,}"
                   required
                   onInvalid={(e) => {
-
                     let input = e.target.value
                     let pattern = /^[a-z]+[0-9]*@[a-z]+\.[a-z]{2,}$/
                     if (!pattern.test(input)) {
@@ -157,7 +141,6 @@ const SignUp = () => {
                   type="text"
                   placeholder="Username"
                   autoComplete="new-password"
-                  pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*@)[a-zA-Z\d@]{6}$"
                   title="Username must not be empty"
                   required
                   onInvalid={(e) => e.target.setCustomValidity('Username must not be empty')}
