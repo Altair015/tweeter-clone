@@ -1,0 +1,17 @@
+#user-banner-edit-icon {
+  background-color: white;
+  color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
+}
+
+.user-profile-icon-placeholder:hover,
+.user-profile-banner-icon-placholder:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.user-profile-icon-placeholder:active #user-profile-edit-icon {
+  color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
+}
+
+#user-profile-edit-icon {
+  color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity));
+}

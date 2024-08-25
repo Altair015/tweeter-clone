@@ -1,0 +1,25 @@
+application design :
+    controllers : bussiness logic for each route
+    models : mongo Schema's
+    routes : api routes
+        authRoute : signin, signup and signout
+    middlewares : 
+        protected : middleware to authenticate, using jwt token for protected routes
+        ipCheck : middleware to validate the req, needed to be made from the same machine. [not implemented]
+        multerSetup : upload location and storage setup.
+        createuploadDir : Creation of required directories, not available for file handling. [not implemented]
+    db :
+        connecion : atlas/mongodb connection setup
+    services :
+        userServices : user related Services
+    utils : utility/helper functions
+        handleJWT :  
+            generateJWT : generate JWT and sets expiry and sets the token in the res as cookie
+        hashingPassword : in case, db is compromised the passwords are all hashed.
+            hashingPassword : function to hash password using bcrypt
+            validatePassword : to compare the hashed password with the real password
+        
+------------------------------------------------------------------------------------------------------------------------------
+routing design :
+    server(/api)->route(/v_<version no>)->route(/[auth,user])
+ 

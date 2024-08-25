@@ -1,0 +1,8 @@
+.env
+node_modules
+/backend/package-lock.json
+/frontend/package-lock.json
+# /frontend/public
+/backend/public
+frontend/public/images/posts-images
+frontend/public/images/profile-images
